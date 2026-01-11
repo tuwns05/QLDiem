@@ -1,0 +1,60 @@
+﻿@model QLDiem.Models.Diem
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Diem</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HocKy)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HocKy)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NamHoc)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NamHoc)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DiemQt)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DiemQt)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DiemCk)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DiemCk)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DiemTk)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DiemTk)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MaHpNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MaHpNavigation.MaHp)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MaSvNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MaSvNavigation.MaSv)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaDiem">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

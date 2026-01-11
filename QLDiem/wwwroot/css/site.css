@@ -1,0 +1,111 @@
+﻿html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+/* Import font chữ hiện đại từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif; /* Áp dụng font cho toàn trang */
+}
+
+/* Tùy chỉnh thanh Navbar */
+.navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important; /* Đổ bóng nhẹ nhàng hơn */
+    padding: 15px 0; /* Tăng khoảng cách trên dưới cho thoáng */
+}
+
+/* Tùy chỉnh Brand (Tên hệ thống) */
+.navbar-brand {
+    font-weight: 700;
+    color: #2c3e50 !important; /* Màu xanh đen sang trọng */
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+    .navbar-brand:hover {
+        color: #3498db !important; /* Đổi màu khi hover */
+    }
+
+/* Tùy chỉnh các Link Menu (Home, Quản lý điểm) */
+.navbar-nav .nav-link {
+    color: #555 !important;
+    font-weight: 500;
+    margin-right: 15px;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s ease;
+}
+
+    /* Hiệu ứng gạch chân (Underline) chạy ra khi hover */
+    .navbar-nav .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        display: block;
+        margin-top: 5px;
+        right: 0;
+        background: #3498db; /* Màu xanh chủ đạo */
+        transition: width 0.3s ease;
+        -webkit-transition: width 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #3498db !important;
+    }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+            background: #3498db;
+        }
+
+/* Tùy chỉnh nút Logout đặc biệt */
+/* Lưu ý: Trong HTML của bạn, nút logout đang nằm trong div .btn-logout */
+.btn-logout a.nav-link {
+    background-color: #ffeff0; /* Nền đỏ rất nhạt */
+    color: #e74c3c !important; /* Chữ màu đỏ */
+    padding: 8px 20px;
+    border-radius: 25px; /* Bo tròn nút */
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+    .btn-logout a.nav-link:hover {
+        background-color: #e74c3c; /* Nền đỏ đậm khi hover */
+        color: #ffffff !important; /* Chữ chuyển sang trắng */
+        box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); /* Đổ bóng đỏ */
+        transform: translateY(-2px); /* Nút bay lên nhẹ */
+    }
+
+/* Mobile Toggler (Nút 3 gạch trên điện thoại) */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }

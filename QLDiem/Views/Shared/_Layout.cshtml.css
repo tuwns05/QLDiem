@@ -1,0 +1,147 @@
+﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a {
+  color: #0077cc;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+/* Sidebar styles */
+#sidebarMenu {
+    width: 60px;
+    transition: width 0.3s ease;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+    z-index: 100;
+}
+
+    #sidebarMenu:hover {
+        width: 250px;
+    }
+
+    /* Nav items */
+    #sidebarMenu .nav-item {
+        white-space: nowrap;
+    }
+
+        #sidebarMenu .nav-item:first-child {
+            font-weight: bold;
+            padding: 10px 15px;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+    #sidebarMenu .nav-link {
+        padding: 12px 15px;
+        color: #333;
+        border-radius: 8px;
+        margin: 4px 8px;
+        transition: all 0.3s ease;
+    }
+
+        #sidebarMenu .nav-link:hover {
+            background-color: #e9ecef;
+            color: #0d6efd;
+        }
+
+        #sidebarMenu .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        /* Icon styles */
+        #sidebarMenu .nav-link i {
+            min-width: 24px;
+            text-align: center;
+        }
+
+    /* Text menu - ẩn khi không hover */
+    #sidebarMenu .menu-text {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    #sidebarMenu:hover .menu-text {
+        opacity: 1;
+    }
+
+/* Main content - điều chỉnh margin khi sidebar thu gọn */
+main.col-md-9 {
+    margin-left: 60px !important;
+    width: calc(100% - 60px) !important;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #sidebarMenu {
+        width: 0;
+        position: fixed;
+    }
+
+        #sidebarMenu:hover {
+            width: 250px;
+        }
+
+    main.col-md-9 {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+}
+
+/* Scrollbar cho sidebar */
+#sidebarMenu::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebarMenu::-webkit-scrollbar-thumb {
+    background-color: #c0c0c0;
+    border-radius: 3px;
+}
+
+#sidebarMenu::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}

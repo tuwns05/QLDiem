@@ -1,0 +1,78 @@
+﻿@model IEnumerable<QLDiem.Models.Diem>
+
+
+@{
+    ViewData["Title"] = "QuanLyDiem";
+
+}
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+}
+
+
+<p>
+    <a asp-action="Create" class="btn btn-add">Thêm điểm cho sinh viên</a>
+</p>
+<div class="table-wrapper">
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã SV</th>
+            <th>Họ Tên</th>
+            <th>Lớp</th>
+            <th>Mã HP</th>
+            <th>Tên HP</th>
+            <th>Học Kỳ</th>
+            <th>Năm Học</th>
+            <th>Điểm Quá Trình</th>
+            <th>Điểm Cuối Kỳ</th>
+            <th>Điểm TK</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaSvNavigation.HoTen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaSvNavigation.Lop)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaHpNavigation.MaHp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaHpNavigation.TenHp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HocKy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NamHoc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiemQt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiemCk)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiemTk)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a> |
+                    <a asp-action="Details" asp-route-id="@item.MaDiem" class="btn btn-ct">Chi Tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaDiem" class="btn btn-xoa">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
