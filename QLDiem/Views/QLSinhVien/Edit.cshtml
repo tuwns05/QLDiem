@@ -1,4 +1,7 @@
 ﻿@model QLDiem.Models.SinhVien
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
+}
 
 @{
     ViewData["Title"] = "Edit";
@@ -40,9 +43,12 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Quay lại
+    </a>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

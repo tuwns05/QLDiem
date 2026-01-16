@@ -44,7 +44,7 @@
                     }
                     else
                     {
-                        return RedirectToAction("Index", "SinhVien", new {id = checkTaiKhoan.MaSv});
+                        return RedirectToAction("Index", "QLSinhVien", new {id = checkTaiKhoan.MaSv});
                     }
                 }
                 ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng";

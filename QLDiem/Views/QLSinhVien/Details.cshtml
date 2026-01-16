@@ -1,42 +1,72 @@
 ﻿@model QLDiem.Models.SinhVien
-
-@{
-    ViewData["Title"] = "Details";
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
 }
 
-<h1>Details</h1>
+@{
+    ViewData["Title"] = "Chi tiết sinh viên";
+    var danhSachDiem = ViewBag.DanhSachDiem as List<QLDiem.Models.Diem>;
+}
 
-<div>
-    <h4>SinhVien</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HoTen)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HoTen)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lop)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Lop)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GioiTinh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GioiTinh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NgaySinh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NgaySinh)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaSv">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<h2>Thông tin sinh viên</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã SV</th>
+        <td>@Model.MaSv</td>
+    </tr>
+    <tr>
+        <th>Họ tên</th>
+        <td>@Model.HoTen</td>
+    </tr>
+    <tr>
+        <th>Lớp</th>
+        <td>@Model.Lop</td>
+    </tr>
+    <tr>
+        <th>Giới tính</th>
+        <td>@Model.GioiTinh</td>
+    </tr>
+    <tr>
+        <th>Ngày sinh</th>
+        <td>@Model.NgaySinh?.ToString("dd/MM/yyyy")</td>
+    </tr>
+</table>
+
+<hr />
+
+<h3>Bảng điểm</h3>
+
+@if (danhSachDiem != null && danhSachDiem.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Lớp học phần</th>
+                <th>Điểm QT</th>
+                <th>Điểm CK</th>
+                <th>Điểm TK</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in danhSachDiem)
+            {
+                <tr>
+                    <td>@d.MaLopHp</td>
+                    <td>@d.DiemQt</td>
+                    <td>@d.DiemCk</td>
+                    <td>@d.DiemTk</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">Sinh viên chưa có điểm.</p>
+}
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">
+        ← Quay lại
+    </a>
 </div>

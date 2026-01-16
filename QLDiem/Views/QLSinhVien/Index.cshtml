@@ -1,53 +1,96 @@
 ﻿@model IEnumerable<QLDiem.Models.SinhVien>
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
+}
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý sinh viên";
+    var danhSachLop = ViewBag.DanhSachLop as List<string>;
 }
 
-<h1>Index</h1>
+<div class="page-wrapper">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.HoTen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lop)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GioiTinh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgaySinh)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.HoTen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lop)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GioiTinh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgaySinh)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaSv">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaSv">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaSv">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- ===== HEADER ===== -->
+    <div class="page-header d-flex justify-content-between align-items-center mb-3">
+        <h2>Quản lý sinh viên</h2>
+        <a asp-action="Create" class="btn btn-success">➕ Thêm sinh viên</a>
+    </div>
+
+    <!-- ===== FILTER COMBOBOX ===== -->
+    <form method="get" asp-action="Index" class="mb-4">
+        <div class="form-inline">
+            <label class="mr-2">Lớp sinh hoạt:</label>
+
+            <select name="lop" class="form-control" style="width:220px">
+                <option value="">-- Tất cả lớp --</option>
+
+                @foreach (var lopItem in (IEnumerable<string>)ViewBag.DanhSachLop)
+                {
+                    if (ViewBag.Lop == lopItem)
+                    {
+                        <option value="@lopItem" selected>@lopItem</option>
+                    }
+                    else
+                    {
+                        <option value="@lopItem">@lopItem</option>
+                    }
+                }
+            </select>
+
+            <button type="submit" class="btn btn-primary mr-2">
+                🔍 Lọc
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                ↻ Reset
+            </a>
+        </div>
+    </form>
+
+    <!-- ===== TABLE ===== -->
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Họ tên</th>
+                <th>Lớp</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th style="width:200px">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.HoTen</td>
+                        <td>@item.Lop</td>
+                        <td>@item.GioiTinh</td>
+                        <td>@item.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.MaSv"
+                               class="btn btn-info btn-sm">Chi tiết</a>
+
+                            <a asp-action="Edit" asp-route-id="@item.MaSv"
+                               class="btn btn-warning btn-sm">Sửa</a>
+
+                            <a asp-action="Delete" asp-route-id="@item.MaSv"
+                               class="btn btn-danger btn-sm">Xóa</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-danger">
+                        Không có sinh viên
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+

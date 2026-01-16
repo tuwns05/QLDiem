@@ -18,11 +18,26 @@ namespace QLDiem.Controllers
             _context = context;
         }
 
-        // GET: QLSinhVien
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? lop)
         {
-            return View(await _context.SinhViens.ToListAsync());
+            var query = _context.SinhViens.AsQueryable();
+
+            if (!string.IsNullOrEmpty(lop))
+            {
+                query = query.Where(sv => sv.Lop.Contains(lop));
+            }
+
+            ViewBag.DanhSachLop = await _context.SinhViens
+                .Select(sv => sv.Lop)
+                .Distinct()
+                .OrderBy(l => l)
+                .ToListAsync();
+
+            ViewBag.Lop = lop;
+
+            return View(await query.ToListAsync());
         }
+
 
         // GET: QLSinhVien/Details/5
         public async Task<IActionResult> Details(string id)
@@ -38,6 +53,9 @@ namespace QLDiem.Controllers
             {
                 return NotFound();
             }
+            ViewBag.DanhSachDiem = await _context.Diems
+                .Where(d => d.MaSv == id)
+                .ToListAsync();
 
             return View(sinhVien);
         }
@@ -118,13 +136,14 @@ namespace QLDiem.Controllers
         // GET: QLSinhVien/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
 
             var sinhVien = await _context.SinhViens
                 .FirstOrDefaultAsync(m => m.MaSv == id);
+
             if (sinhVien == null)
             {
                 return NotFound();
@@ -138,15 +157,24 @@ namespace QLDiem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var sinhVien = await _context.SinhViens.FindAsync(id);
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var sinhVien = await _context.SinhViens
+                .FirstOrDefaultAsync(m => m.MaSv == id);
+
             if (sinhVien != null)
             {
                 _context.SinhViens.Remove(sinhVien);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool SinhVienExists(string id)
         {

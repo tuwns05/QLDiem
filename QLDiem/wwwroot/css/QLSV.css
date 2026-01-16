@@ -1,161 +1,812 @@
-﻿/* Reset và cài đặt cơ bản */
+﻿/* ========================================
+   PROFESSIONAL MANAGEMENT SYSTEM - QLSV
+   ======================================== */
+
+/* ========================================
+   1. CSS VARIABLES (Design System)
+   ======================================== */
+:root {
+    /* Primary Colors */
+    --primary: #3b82f6;
+    --primary-light: #60a5fa;
+    --primary-dark: #1e40af;
+    /* Status Colors */
+    --success: #10b981;
+    --success-dark: #059669;
+    --warning: #f59e0b;
+    --warning-dark: #d97706;
+    --danger: #ef4444;
+    --danger-dark: #dc2626;
+    --info: #06b6d4;
+    /* Neutral Colors */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    /* Text Colors */
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    /* Background */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    /* Spacing System */
+    --space-2: 2px;
+    --space-4: 4px;
+    --space-6: 6px;
+    --space-8: 8px;
+    --space-12: 12px;
+    --space-16: 16px;
+    --space-20: 20px;
+    --space-24: 24px;
+    --space-32: 32px;
+    --space-40: 40px;
+    /* Border Radius */
+    --radius-2: 2px;
+    --radius-4: 4px;
+    --radius-6: 6px;
+    --radius-8: 8px;
+    /* Shadows */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   2. RESET & BASE
+   ======================================== */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     line-height: 1.6;
-    color: #333;
-    background-color: #f5f7fa;
 }
 
-/* Tiêu đề trang */
-h1 {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #3498db;
-}
-
-/* Nút thêm */
-.btn-add {
-    display: inline-block;
-    background-color: #2ecc71;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
+/* ========================================
+   3. TYPOGRAPHY
+   ======================================== */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
     font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-16);
 }
 
-    .btn-add:hover {
-        background-color: #27ae60;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+h2 {
+    font-size: 1.75rem;
+    color: var(--gray-900);
+}
+
+h3 {
+    font-size: 1.25rem;
+    color: var(--gray-800);
+}
+
+h4 {
+    font-size: 1rem;
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+p {
+    margin-bottom: var(--space-16);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+    a:hover {
+        color: var(--primary-dark);
     }
 
-/* Container của bảng */
-.table-wrapper {
-    overflow-x: auto;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    padding: 20px;
-    margin-top: 20px;
+hr {
+    border: none;
+    border-top: 1px solid var(--gray-200);
+    margin: var(--space-24) 0;
 }
 
-/* Bảng */
+/* ========================================
+   4. PAGE LAYOUT
+   ======================================== */
+.page-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-32);
+    background-color: var(--bg-secondary);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-32);
+    gap: var(--space-16);
+}
+
+    .page-header h1,
+    .page-header h2 {
+        margin: 0;
+        flex: 1;
+    }
+
+/* ========================================
+   5. BUTTONS
+   ======================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius-6);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    user-select: none;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+    .btn:active {
+        transform: scale(0.98);
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+/* Button Variants */
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+    .btn-primary:hover:not(:disabled) {
+        background-color: var(--primary-dark);
+        box-shadow: var(--shadow-md);
+    }
+
+.btn-secondary {
+    background-color: var(--gray-500);
+    color: white;
+}
+
+    .btn-secondary:hover:not(:disabled) {
+        background-color: var(--gray-600);
+        box-shadow: var(--shadow-md);
+    }
+
+.btn-success {
+    background-color: var(--success);
+    color: white;
+}
+
+    .btn-success:hover:not(:disabled) {
+        background-color: var(--success-dark);
+        box-shadow: var(--shadow-md);
+    }
+
+.btn-warning {
+    background-color: var(--warning);
+    color: white;
+}
+
+    .btn-warning:hover:not(:disabled) {
+        background-color: var(--warning-dark);
+        box-shadow: var(--shadow-md);
+    }
+
+.btn-danger {
+    background-color: var(--danger);
+    color: white;
+}
+
+    .btn-danger:hover:not(:disabled) {
+        background-color: var(--danger-dark);
+        box-shadow: var(--shadow-md);
+    }
+
+.btn-info {
+    background-color: var(--info);
+    color: white;
+}
+
+    .btn-info:hover:not(:disabled) {
+        background-color: #0891b2;
+        box-shadow: var(--shadow-md);
+    }
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+/* ========================================
+   6. FORMS
+   ======================================== */
+.form-group {
+    margin-bottom: var(--space-20);
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: var(--space-8);
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+    }
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-6);
+    font-size: 0.9375rem;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+
+    .form-control:hover {
+        border-color: var(--gray-400);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted);
+    }
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+select.form-control {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-right: 36px;
+}
+
+.form-error {
+    margin-top: var(--space-6);
+    font-size: 0.8125rem;
+    color: var(--danger);
+}
+
+.validation-summary-errors {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-6);
+    padding: var(--space-16);
+    margin-bottom: var(--space-20);
+    color: var(--danger);
+}
+
+    .validation-summary-errors ul {
+        margin: 0;
+        padding-left: var(--space-24);
+    }
+
+    .validation-summary-errors li {
+        margin-bottom: var(--space-6);
+    }
+
+/* ========================================
+   7. FILTER SECTION
+   ======================================== */
+.form-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+    align-items: flex-end;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    margin-bottom: var(--space-24) !important;
+    padding-bottom: var(--space-20);
+    border-bottom: 2px solid var(--primary);
+}
+
+    .form-inline label {
+        display: inline-block;
+        margin: 0;
+        font-weight: 500;
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+    }
+
+    .form-inline .form-control {
+        width: 280px;
+        padding: 10px 14px;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-6);
+        font-size: 0.9375rem;
+    }
+
+        .form-inline .form-control:hover {
+            border-color: var(--primary);
+        }
+
+        .form-inline .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+    .form-inline .btn {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+.mr-2 {
+    margin-right: var(--space-12);
+}
+
+.mb-3 {
+    margin-bottom: var(--space-20);
+}
+
+.mb-4 {
+    margin-bottom: var(--space-32);
+}
+
+/* ========================================
+   8. TABLES
+   ======================================== */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-6);
+    margin-top: 0;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px;
+    font-size: 0.9375rem;
 }
 
     .table thead {
-        background-color: #3498db;
+        background-color: var(--primary);
         color: white;
     }
 
     .table th {
-        padding: 15px 12px;
+        padding: 14px 16px;
         text-align: left;
         font-weight: 600;
-        font-size: 0.95rem;
-        letter-spacing: 0.5px;
+        font-size: 0.9375rem;
+        user-select: none;
+        white-space: nowrap;
     }
 
     .table tbody tr {
-        border-bottom: 1px solid #eef1f5;
-        transition: background-color 0.2s ease;
+        border-bottom: 1px solid var(--gray-200);
+        transition: background-color var(--transition-fast);
     }
 
         .table tbody tr:hover {
-            background-color: #f8fafc;
+            background-color: var(--bg-tertiary);
         }
 
     .table td {
-        padding: 15px 12px;
-        color: #555;
+        padding: 12px 16px;
+        color: var(--text-primary);
+        font-size: 0.9375rem;
     }
 
-/* Các loại nút */
-.btn {
-    display: inline-block;
-    padding: 6px 12px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: none;
-    cursor: pointer;
-    margin: 2px;
+        .table td a {
+            color: var(--primary);
+        }
+
+            .table td a:hover {
+                text-decoration: underline;
+            }
+
+/* Table Variants */
+.table-bordered {
+    border: 1px solid var(--gray-200);
 }
 
-.btn-sua {
-    background-color: #3498db;
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid var(--gray-200);
+    }
+
+.table-striped tbody tr:nth-child(even) {
+    background-color: var(--bg-tertiary);
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--gray-100);
+}
+
+.thead-dark {
+    background-color: var(--primary);
     color: white;
 }
 
-    .btn-sua:hover {
-        background-color: #2980b9;
+    .thead-dark th {
+        background-color: var(--primary);
+        color: white;
+        font-weight: 600;
     }
 
-.btn-ct {
-    background-color: #7f8c8d;
-    color: white;
+/* ========================================
+   9. ACTION BUTTONS
+   ======================================== */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
-    .btn-ct:hover {
-        background-color: #636e72;
+    .action-buttons .btn {
+        flex: 1;
+        min-width: 60px;
+        padding: 5px 10px;
+        font-size: 0.75rem;
     }
 
-.btn-xoa {
-    background-color: #e74c3c;
-    color: white;
+/* ========================================
+   10. DETAILS & DISPLAY
+   ======================================== */
+dl.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-24);
+    padding: var(--space-24) 0;
 }
 
-    .btn-xoa:hover {
-        background-color: #c0392b;
+    dl.row dt {
+        font-weight: 600;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: var(--space-8);
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: var(--space-12);
     }
 
-/* Responsive */
+    dl.row dd {
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+.col-sm-2 {
+    grid-column: span 1;
+    min-width: 150px;
+}
+
+.col-sm-10 {
+    grid-column: span 1;
+    min-width: 250px;
+}
+
+/* ========================================
+   11. TEXT UTILITIES
+   ======================================== */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-muted {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+.text-success {
+    color: var(--success);
+}
+
+/* ========================================
+   12. SPACING UTILITIES
+   ======================================== */
+.mt-3 {
+    margin-top: var(--space-20);
+}
+
+.mt-12 {
+    margin-top: var(--space-12);
+}
+
+.mt-16 {
+    margin-top: var(--space-16);
+}
+
+.mt-20 {
+    margin-top: var(--space-20);
+}
+
+.mt-24 {
+    margin-top: var(--space-24);
+}
+
+.mb-12 {
+    margin-bottom: var(--space-12);
+}
+
+.mb-16 {
+    margin-bottom: var(--space-16);
+}
+
+.mb-20 {
+    margin-bottom: var(--space-20);
+}
+
+.mb-24 {
+    margin-bottom: var(--space-24);
+}
+
+.pt-24 {
+    padding-top: var(--space-24);
+}
+
+.pb-24 {
+    padding-bottom: var(--space-24);
+}
+
+/* ========================================
+   13. GRID & LAYOUT
+   ======================================== */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16);
+    margin: 0;
+}
+
+.col-md-4 {
+    flex: 0 0 calc(33.333% - var(--space-12));
+    min-width: 280px;
+}
+
+.col-md-6 {
+    flex: 0 0 calc(50% - var(--space-8));
+    min-width: 280px;
+}
+
+.col-md-8 {
+    flex: 0 0 calc(66.666% - var(--space-12));
+    min-width: 280px;
+}
+
+.col-md-12 {
+    flex: 0 0 100%;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+/* ========================================
+   14. RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 1024px) {
+    .page-wrapper {
+        padding: var(--space-24);
+    }
+
+    .col-md-4 {
+        flex: 0 0 calc(50% - var(--space-8));
+    }
+
+    .col-md-6 {
+        flex: 0 0 calc(50% - var(--space-8));
+    }
+
+    .col-md-8 {
+        flex: 0 0 100%;
+    }
+}
+
 @media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    .table-wrapper {
-        padding: 10px;
+    .page-wrapper {
+        padding: var(--space-20);
     }
 
     h1 {
         font-size: 1.5rem;
     }
 
-    .btn-add {
-        display: block;
-        text-align: center;
-        margin: 0 auto 15px;
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: var(--space-24);
+    }
+
+    .form-inline {
+        flex-direction: column;
+    }
+
+        .form-inline label {
+            display: block;
+            margin-bottom: var(--space-8);
+        }
+
+        .form-inline .form-control {
+            width: 100%;
+        }
+
+    .btn {
         width: 100%;
-        max-width: 300px;
+    }
+
+    .btn-sm {
+        width: auto;
+    }
+
+    .col-md-4,
+    .col-md-6,
+    .col-md-8 {
+        flex: 0 0 100%;
+        min-width: auto;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .table {
+        font-size: 0.8125rem;
+    }
+
+        .table th,
+        .table td {
+            padding: 10px 12px;
+        }
+
+    .action-buttons .btn {
+        min-width: 50px;
+        font-size: 0.7rem;
+    }
+
+    dl.row {
+        grid-template-columns: 1fr;
+        gap: var(--space-16);
+    }
+}
+
+@media (max-width: 480px) {
+    .page-wrapper {
+        padding: var(--space-16);
+    }
+
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    h2 {
+        font-size: 1.125rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    h4 {
+        font-size: 0.9375rem;
+    }
+
+    .form-inline {
+        gap: var(--space-12);
+        padding-bottom: var(--space-16);
+    }
+
+        .form-inline .form-control {
+            width: 100%;
+        }
+
+    .table th {
+        padding: 8px 10px;
+        font-size: 0.7rem;
+    }
+
+    .table td {
+        padding: 8px 10px;
+        font-size: 0.7rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+        .action-buttons .btn {
+            width: 100%;
+            min-width: auto;
+            padding: 8px 12px;
+        }
+
+    .form-group {
+        margin-bottom: var(--space-16);
     }
 
     .btn {
-        display: block;
-        margin: 5px 0;
-        text-align: center;
+        font-size: 0.8125rem;
+        padding: 8px 12px;
     }
 
-    .table td:last-child {
-        min-width: 200px;
+    dl.row {
+        gap: var(--space-12);
     }
 }
