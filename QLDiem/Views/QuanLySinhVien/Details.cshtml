@@ -1,10 +1,12 @@
 ﻿@model QLDiem.Models.SinhVien
-
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
+}
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi Tiết Sinh Viên";
 }
 
-<h1>Details</h1>
+<h1>Chi tiết sinh viên</h1>
 
 <div>
     <h4>SinhVien</h4>
@@ -40,3 +42,42 @@
     <a asp-action="Edit" asp-route-id="@Model?.MaSv">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<hr />
+<h4>BẢNG ĐIỂM SINH VIÊN</h4>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Học phần</th>
+            <th>Học kỳ</th>
+            <th>Năm học</th>
+            <th>QT</th>
+            <th>CK</th>
+            <th>TK</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.BangDiem != null && ViewBag.BangDiem.Count > 0)
+        {
+            foreach (var d in ViewBag.BangDiem)
+            {
+                <tr>
+                    <td>@d.TenHP</td>
+                    <td>@d.HocKy</td>
+                    <td>@d.NamHoc</td>
+                    <td>@d.DiemQt</td>
+                    <td>@d.DiemCk</td>
+                    <td>@d.DiemTk</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">
+                    Sinh viên chưa có điểm
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

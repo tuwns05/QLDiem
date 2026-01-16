@@ -17,11 +17,40 @@ namespace QLDiem.Controllers
         {
             _context = context;
         }
-
-        // GET: QuanLySinhVien
-        public async Task<IActionResult> Index()
+        // =========================
+        // DANH SÁCH SINH VIÊN + LỌC THEO LỚP HỌC PHẦN
+        // =========================
+        public async Task<IActionResult> Index(string? maHP, string? lop)
         {
-            return View(await _context.SinhViens.ToListAsync());
+            // ComboBox Mã học phần
+            ViewBag.HocPhans = new SelectList(
+                await _context.HocPhans.ToListAsync(),
+                "MaHp",
+                "MaHp",
+                maHP
+            );
+
+            // Query gốc
+            var query = _context.SinhViens.AsQueryable();
+
+            // Lọc theo Mã học phần
+            if (!string.IsNullOrEmpty(maHP))
+            {
+                query = from sv in query
+                        join d in _context.Diems on sv.MaSv equals d.MaSv
+                        where d.MaHp == maHP
+                        select sv;
+            }
+
+            // Lọc theo Lớp sinh hoạt
+            if (!string.IsNullOrEmpty(lop))
+            {
+                query = query.Where(sv => sv.Lop.Contains(lop));
+            }
+
+            ViewBag.lop = lop;
+
+            return View(await query.Distinct().ToListAsync());
         }
 
         // GET: QuanLySinhVien/Details/5
@@ -38,6 +67,22 @@ namespace QLDiem.Controllers
             {
                 return NotFound();
             }
+            var bangDiem = await (
+                    from d in _context.Diems
+                    join hp in _context.HocPhans on d.MaHp equals hp.MaHp
+                    where d.MaSv == id
+                    select new
+                    {
+                        TenHP = hp.TenHp,
+                        d.HocKy,
+                        d.NamHoc,
+                        d.DiemQt,
+                        d.DiemCk,
+                        d.DiemTk
+                    }
+                ).ToListAsync();
+
+            ViewBag.BangDiem = bangDiem;
 
             return View(sinhVien);
         }
@@ -57,8 +102,23 @@ namespace QLDiem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sinhVien);
+                // 1. Thêm sinh viên
+                _context.SinhViens.Add(sinhVien);
+
+                // 2. Tạo tài khoản cho sinh viên
+                var taiKhoan = new TaiKhoan
+                {
+                    TenDangNhap = sinhVien.MaSv,
+                    MatKhau = sinhVien.MaSv,   // mật khẩu mặc định
+                    VaiTro = "SinhVien",
+                    MaSv = sinhVien.MaSv
+                };
+
+                _context.TaiKhoans.Add(taiKhoan);
+
+                // 3. Lưu 1 lần
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(sinhVien);
@@ -152,5 +212,6 @@ namespace QLDiem.Controllers
         {
             return _context.SinhViens.Any(e => e.MaSv == id);
         }
+
     }
 }
