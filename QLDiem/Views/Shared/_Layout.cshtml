@@ -25,87 +25,62 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-          
-            <div class="container-fluid">
-
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hệ thống quản lý điểm Sinh Viên</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                      
-                      
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Quản lý điểm</a>
-                            </li>
-
-                    </ul>
-                  
-                    <div class="btn btn-logout">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="AccCount" asp-action="Logout">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+       
 
 
     </header>
     <div class="container-fluid">
-
         <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapsed-sidebar">
-                <div class="position-sticky pt-3 d-flex flex-column align-items-stretch">
+    
+            <nav id="sidebarMenu" class="sidebar collapsed-sidebar">
+                <div class=" pt-3 d-flex flex-column align-items-stretch">
                     <ul class="nav nav-pills flex-column mb-auto">
-                        <button class="navbar-toggler" type="button"
-                  
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-
+                        <h5 class="title-web">
+                            Grade Manager
+                        </h5>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door fs-5"></i>
+                                <span class="menu-text ms-2">Home</span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link d-flex align-items-center" asp-controller="Admin" asp-action="Index">
                                 <i class="bi bi-speedometer2 fs-5"></i>
                                 <span class="menu-text ms-2">Quản lý điểm</span>
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" asp-controller="QuanLyLHP" asp-action="Index">
+                            <a class="nav-link d-flex align-items-center" asp-controller="LopHocPhans" asp-action="Index">
                                 <i class="bi bi-journal-bookmark fs-5"></i>
                                 <span class="menu-text ms-2">Quản lý lớp học phần</span>
                             </a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" asp-controller="QuanLySinhVien" asp-action="Index">
+                            <a class="nav-link d-flex align-items-center" asp-controller="QLSinhVien" asp-action="Index">
                                 <i class="bi bi-people fs-5"></i>
-                                <span class="menu-text ms-2">Sinh viên</span>
+                                <span class="menu-text ms-2">Quản lý sinh viên</span>
                             </a>
                         </li>
+                        <div class="btn-logout">
+                            <a class="nav-link" asp-area="" asp-controller="AccCount" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right fs-5"></i>
+                                <span class="menu-text ms-2">Logout</span>
+                            </a>
+                        </div>
                     </ul>
                 </div>
             </nav>
 
-
-            <!-- Nội dung chính -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+           
+            <main class="main-content">
                 @RenderBody()
             </main>
         </div>
     </div>
 
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - QLDiem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

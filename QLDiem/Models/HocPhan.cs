@@ -13,7 +13,5 @@ public partial class HocPhan
 
     public double? HeSo { get; set; }
 
-    public virtual ICollection<DangKyMonHoc> DangKyMonHocs { get; set; } = new List<DangKyMonHoc>();
-
-    public virtual ICollection<Diem> Diems { get; set; } = new List<Diem>();
+    public virtual ICollection<LopHocPhan> LopHocPhans { get; set; } = new List<LopHocPhan>();
 }

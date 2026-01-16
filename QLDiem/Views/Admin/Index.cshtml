@@ -9,70 +9,146 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
+    @if (ViewBag.ShowNhapDiem == true)
+    {
+        <link rel="stylesheet" href="~/css/FormNhapDiem.css" asp-append-version="true" />
+    }
+ 
 }
 
 
-<p>
-    <a asp-action="Create" class="btn btn-add">Thêm điểm cho sinh viên</a>
-</p>
+<h3>Quản lý điểm sinh viên theo lớp học phần </h3>
+
+<div class="chon-hoc-phan">
+    <h4 class="title-chonhp">Chọn học phần</h4>
+    <form class="fill-form" method="get" asp-action="FillLopHP">
+        <div class="field">
+            <label for="hoc_ky">Học kỳ</label>
+            <select id="hoc_ky" name="hocKy">
+                <!-- Sửa name thành hocKy -->
+                <option value="">-- Chọn học kỳ --</option>
+                <option value="1">Học kỳ 1</option>
+                <option value="2">Học kỳ 2</option>
+                <option value="3">Học kỳ 3</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="nam_hoc">Năm học</label>
+            <select id="nam_hoc" name="namHoc">
+                <!-- Sửa name thành namHoc -->
+                <option value="">-- Chọn năm học --</option>
+                <!-- Options sẽ được sinh bằng JS -->
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="maLopHp">Lớp học phần</label>
+            <select id="maLopHp" name="MaLopHP" class="form-control">
+              
+                <option value="">-- Chọn lớp học phần --</option>
+            </select>
+        </div>
+
+        <div class="actions">
+            <input type="submit" value="Lọc" />
+        </div>
+    </form>
+</div>
+@if(ViewBag.ShowNhapDiem == true && ViewBag.DiemModel != null)
+{
+    @await Html.PartialAsync("NhapDiem", (QLDiem.Models.Diem)ViewBag.DiemModel)
+}
+
 <div class="table-wrapper">
-<table class="table">
-    <thead>
-        <tr>
-            <th>Mã SV</th>
-            <th>Họ Tên</th>
-            <th>Lớp</th>
-            <th>Mã HP</th>
-            <th>Tên HP</th>
-            <th>Học Kỳ</th>
-            <th>Năm Học</th>
-            <th>Điểm Quá Trình</th>
-            <th>Điểm Cuối Kỳ</th>
-            <th>Điểm TK</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <h5>@ViewBag.tenHP</h5>
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaSvNavigation.HoTen)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaSvNavigation.Lop)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaHpNavigation.MaHp)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaHpNavigation.TenHp)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HocKy)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NamHoc)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DiemQt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DiemCk)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DiemTk)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a> |
-                    <a asp-action="Details" asp-route-id="@item.MaDiem" class="btn btn-ct">Chi Tiết</a> |
-                    <a asp-action="Delete" asp-route-id="@item.MaDiem" class="btn btn-xoa">Xóa</a>
+                <th>Mã SV</th>
+                <th>Họ Tên</th>
+                <th>Lớp</th>
+                <th>Học Kỳ</th>
+                <th>Năm Học</th>
+                <th>Điểm Quá Trình</th>
+                <th>Điểm Cuối Kỳ</th>
+                <th>Điểm TK</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if(Model ==null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="text-center">Không có sinh viên nào </td>
+                    </tr>
+                }else{
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaSvNavigation.HoTen)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaSvNavigation.Lop)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaLopHpNavigation.HocKy)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaLopHpNavigation.NamHoc)
+                            </td>
+                            <td>
+                                @(item.DiemQt.HasValue ? item.DiemQt.ToString() : "Chưa nhập")
+                            </td>
+                            <td>
+                                @(item.DiemCk.HasValue ? item.DiemCk.ToString() : "Chưa nhập")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DiemTk)
+                            </td>
+                            <td>
+                                @{
+                                    if(item.DiemQt == null || item.DiemCk == null)
+                                    {
+                                        <a asp-action="Index"
+                                           asp-route-maSv="@item.MaSv"
+                                           asp-route-maLopHp="@item.MaLopHp"
+                                           class="btn btn-nhap-diem">
+                                            Nhập điểm
+                                        </a>
+                                    }
+                                    else
+                                    {
+                
+                                <a asp-action="Edit" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a>
+                                <a asp-action="Details" asp-route-id="@item.MaDiem" class="btn btn-ct">Chi Tiết</a>
+                                <a asp-action="Delete" asp-route-id="@item.MaDiem" class="btn btn-xoa">Xóa</a>
+                                }
+                    }
                 </td>
             </tr>
+        }
+        }
         }
     </tbody>
 </table>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }  
+    <script src="~/js/NamHoc.js"></script>
+    <script src="~/js/LoadHocPhan.js"></script>
+   
+
+}
+
+
+

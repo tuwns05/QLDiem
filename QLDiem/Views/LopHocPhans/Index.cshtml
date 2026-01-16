@@ -1,4 +1,4 @@
-﻿@model IEnumerable<QLDiem.Models.DangKyMonHoc>
+﻿@model IEnumerable<QLDiem.Models.LopHocPhan>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,13 +19,7 @@
                 @Html.DisplayNameFor(model => model.NamHoc)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NgayDangKy)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.MaHpNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaSvNavigation)
             </th>
             <th></th>
         </tr>
@@ -40,18 +34,12 @@
                 @Html.DisplayFor(modelItem => item.NamHoc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NgayDangKy)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.MaHpNavigation.MaHp)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaDk">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaDk">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaDk">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.MaLopHp">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaLopHp">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaLopHp">Delete</a>
             </td>
         </tr>
 }

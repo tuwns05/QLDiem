@@ -25,6 +25,8 @@ public partial class QuanLyDiemContext : DbContext
 
     public virtual DbSet<HocPhan> HocPhans { get; set; }
 
+    public virtual DbSet<LopHocPhan> LopHocPhans { get; set; }
+
     public virtual DbSet<SinhVien> SinhViens { get; set; }
 
     public virtual DbSet<TaiKhoan> TaiKhoans { get; set; }
@@ -42,10 +44,10 @@ public partial class QuanLyDiemContext : DbContext
             entity.ToTable("DangKyMonHoc");
 
             entity.Property(e => e.MaDk).HasColumnName("MaDK");
-            entity.Property(e => e.MaHp)
+            entity.Property(e => e.MaLopHp)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasColumnName("MaHP");
+                .HasColumnName("MaLopHP");
             entity.Property(e => e.MaSv)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -57,9 +59,9 @@ public partial class QuanLyDiemContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.MaHpNavigation).WithMany(p => p.DangKyMonHocs)
-                .HasForeignKey(d => d.MaHp)
-                .HasConstraintName("FK_DangKyMonHoc_HocPhan");
+            entity.HasOne(d => d.MaLopHpNavigation).WithMany(p => p.DangKyMonHocs)
+                .HasForeignKey(d => d.MaLopHp)
+                .HasConstraintName("FK_DangKyMonHoc_LopHocPhan");
 
             entity.HasOne(d => d.MaSvNavigation).WithMany(p => p.DangKyMonHocs)
                 .HasForeignKey(d => d.MaSv)
@@ -72,26 +74,22 @@ public partial class QuanLyDiemContext : DbContext
 
             entity.ToTable("Diem");
 
-            entity.HasIndex(e => new { e.MaSv, e.MaHp, e.HocKy, e.NamHoc }, "UQ_Diem").IsUnique();
-
             entity.Property(e => e.DiemCk).HasColumnName("DiemCK");
             entity.Property(e => e.DiemQt).HasColumnName("DiemQT");
             entity.Property(e => e.DiemTk).HasColumnName("DiemTK");
-            entity.Property(e => e.MaHp)
+            entity.Property(e => e.MaLopHp)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasColumnName("MaHP");
+                .HasColumnName("MaLopHP");
             entity.Property(e => e.MaSv)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("MaSV");
-            entity.Property(e => e.NamHoc)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+       
 
-            entity.HasOne(d => d.MaHpNavigation).WithMany(p => p.Diems)
-                .HasForeignKey(d => d.MaHp)
-                .HasConstraintName("FK_Diem_HP");
+            entity.HasOne(d => d.MaLopHpNavigation).WithMany(p => p.Diems)
+                .HasForeignKey(d => d.MaLopHp)
+                .HasConstraintName("FK_Diem_LopHocPhan");
 
             entity.HasOne(d => d.MaSvNavigation).WithMany(p => p.Diems)
                 .HasForeignKey(d => d.MaSv)
@@ -157,6 +155,30 @@ public partial class QuanLyDiemContext : DbContext
             entity.Property(e => e.TenHp)
                 .HasMaxLength(100)
                 .HasColumnName("TenHP");
+        });
+
+        modelBuilder.Entity<LopHocPhan>(entity =>
+        {
+            entity.HasKey(e => e.MaLopHp);
+
+            entity.ToTable("LopHocPhan");
+
+            entity.Property(e => e.MaLopHp)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MaLopHP");
+            entity.Property(e => e.MaHp)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MaHP");
+            entity.Property(e => e.NamHoc)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.MaHpNavigation).WithMany(p => p.LopHocPhans)
+                .HasForeignKey(d => d.MaHp)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LopHP_HocPhan");
         });
 
         modelBuilder.Entity<SinhVien>(entity =>

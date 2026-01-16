@@ -181,19 +181,19 @@ h1 {
 
 /* Thêm biểu tượng nhỏ cho các cột điểm */
 .table thead th:nth-child(8)::after {
-    content: " (QT)";
+
     font-size: 0.8rem;
     opacity: 0.8;
 }
 
 .table thead th:nth-child(9)::after {
-    content: " (CK)";
+
     font-size: 0.8rem;
     opacity: 0.8;
 }
 
 .table thead th:nth-child(10)::after {
-    content: " (Tổng)";
+
     font-size: 0.8rem;
     opacity: 0.8;
 }

@@ -21,91 +21,288 @@ body {
   margin-bottom: 60px;
 }
 /* Import font chữ hiện đại từ Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+/* Import font chữ hiện đại từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ========== RESET & BASE ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
-    font-family: 'Poppins', sans-serif; /* Áp dụng font cho toàn trang */
+    font-family: 'Poppins', sans-serif;
+    background: #f5f7fa;
+    color: #2c3e50;
+    overflow-x: hidden;
 }
 
-/* Tùy chỉnh thanh Navbar */
+/* ========== CONTAINER LAYOUT ========== */
+.container-fluid {
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* ========== SIDEBAR ========== */
+#sidebarMenu {
+    background: rgb(11, 100, 193);
+    min-height: 100vh;
+    padding: 0;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    width: 200px !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* Xóa tất cả các định nghĩa về collapsed-sidebar */
+.collapsed-sidebar {
+    /* Xóa hoàn toàn */
+}
+
+    /* Xóa phần CSS ẩn chữ trong collapsed */
+    .collapsed-sidebar .menu-text,
+    .collapsed-sidebar .title-web::before,
+    .collapsed-sidebar .nav-link,
+    .collapsed-sidebar .btn-logout a.nav-link {
+        /* Xóa tất cả */
+    }
+
+/* Đảm bảo sidebar luôn đầy đủ */
+#sidebarMenu {
+    width: 200px !important;
+}
+
+    #sidebarMenu .menu-text {
+        display: inline-block !important;
+        opacity: 1 !important;
+    }
+
+    #sidebarMenu .title-web {
+        font-size: 1.1rem !important;
+    }
+
+    #sidebarMenu .nav-link {
+        justify-content: flex-start !important;
+        padding: 10px 12px !important;
+    }
+
+    #sidebarMenu .btn-logout a.nav-link {
+        justify-content: flex-start !important;
+        padding: 10px 12px !important;
+    }
+
+.position-sticky {
+    position: sticky;
+    top: 0;
+    padding: 20px 0;
+}
+
+/* ========== TITLE WEB (Logo/Brand) ========== */
+.title-web {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 12px 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ========== NAV PILLS (Menu Items) ========== */
+.nav-pills {
+    gap: 5px;
+    padding: 0 10px;
+}
+
+    .nav-pills .nav-item {
+        margin-bottom: 5px;
+    }
+
+    .nav-pills .nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        border: 1px solid transparent;
+    }
+
+        /* Icon trong menu */
+        .nav-pills .nav-link i {
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        .nav-pills .nav-link .menu-text {
+            white-space: nowrap;
+        }
+
+        /* Hover effect cho menu items - CHỈ menu items được hover */
+        .nav-pills .nav-link:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-left: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+            .nav-pills .nav-link:hover i {
+                transform: none;
+            }
+
+        /* Active state */
+        .nav-pills .nav-link.active,
+        .nav-pills .nav-link:focus {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            border-left: 2px solid #ffffff;
+        }
+
+        /* Xóa ripple effect khi click */
+        .nav-pills .nav-link::after {
+            display: none;
+        }
+
+/* ========== LOGOUT BUTTON ========== */
+#sidebarMenu .btn-logout .nav-link {
+    background: rgba(231, 76, 60, 0.15);
+    color: #ff6b6b !important;
+    padding: 12px 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+    #sidebarMenu .btn-logout .nav-link:hover {
+        background: rgba(231, 76, 60, 0.3);
+        color: #ffffff !important;
+    }
+
+/* ========== MAIN CONTENT AREA ========== */
+.main-content {
+    margin-left: 200px;
+    padding: 30px 40px;
+    background: #f5f7fa;
+    min-height: 100vh;
+    width: calc(100% - 200px);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    #sidebarMenu {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px 15px;
+        width: 100%;
+    }
+
+    .title-web {
+        font-size: 1rem;
+        padding: 10px 8px;
+        margin-bottom: 20px;
+    }
+
+    .nav-pills {
+        padding: 0 8px;
+    }
+
+        .nav-pills .nav-link {
+            padding: 10px 10px;
+            font-size: 0.8rem;
+        }
+
+    .btn-logout {
+        margin-top: 15px;
+        padding: 0 8px;
+    }
+}
+
+/* ========== MOBILE TOGGLE BUTTON ========== */
+/* Đã loại bỏ chức năng toggle */
+
+/* ========== SCROLLBAR CUSTOM ========== */
+#sidebarMenu::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebarMenu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#sidebarMenu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+    #sidebarMenu::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+/* ========== ANIMATIONS ========== */
+/* Xóa animation slideIn */
+.nav-pills .nav-item {
+    opacity: 1;
+}
+
+/* ========== NAVBAR TOP (nếu có) ========== */
 .navbar {
     background-color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important; /* Đổ bóng nhẹ nhàng hơn */
-    padding: 15px 0; /* Tăng khoảng cách trên dưới cho thoáng */
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
+    padding: 15px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
 }
 
-/* Tùy chỉnh Brand (Tên hệ thống) */
 .navbar-brand {
     font-weight: 700;
-    color: #2c3e50 !important; /* Màu xanh đen sang trọng */
-    font-size: 1.25rem;
+    color: #2c3e50 !important;
+    font-size: 1.35rem;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
 }
 
     .navbar-brand:hover {
-        color: #3498db !important; /* Đổi màu khi hover */
+        color: #2c5282 !important;
     }
 
-/* Tùy chỉnh các Link Menu (Home, Quản lý điểm) */
-.navbar-nav .nav-link {
-    color: #555 !important;
-    font-weight: 500;
-    margin-right: 15px;
-    position: relative;
-    padding-bottom: 5px;
-    transition: color 0.3s ease;
+/* ========== UTILITY CLASSES ========== */
+.d-flex {
+    display: flex;
 }
 
-    /* Hiệu ứng gạch chân (Underline) chạy ra khi hover */
-    .navbar-nav .nav-link::after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 2px;
-        display: block;
-        margin-top: 5px;
-        right: 0;
-        background: #3498db; /* Màu xanh chủ đạo */
-        transition: width 0.3s ease;
-        -webkit-transition: width 0.3s ease;
-    }
-
-    .navbar-nav .nav-link:hover {
-        color: #3498db !important;
-    }
-
-        .navbar-nav .nav-link:hover::after {
-            width: 100%;
-            left: 0;
-            background: #3498db;
-        }
-
-/* Tùy chỉnh nút Logout đặc biệt */
-/* Lưu ý: Trong HTML của bạn, nút logout đang nằm trong div .btn-logout */
-.btn-logout a.nav-link {
-    background-color: #ffeff0; /* Nền đỏ rất nhạt */
-    color: #e74c3c !important; /* Chữ màu đỏ */
-    padding: 8px 20px;
-    border-radius: 25px; /* Bo tròn nút */
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+.align-items-center {
+    align-items: center;
 }
 
-    .btn-logout a.nav-link:hover {
-        background-color: #e74c3c; /* Nền đỏ đậm khi hover */
-        color: #ffffff !important; /* Chữ chuyển sang trắng */
-        box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); /* Đổ bóng đỏ */
-        transform: translateY(-2px); /* Nút bay lên nhẹ */
-    }
-
-/* Mobile Toggler (Nút 3 gạch trên điện thoại) */
-.navbar-toggler {
-    border: none;
-    outline: none;
+.flex-column {
+    flex-direction: column;
 }
 
-    .navbar-toggler:focus {
-        box-shadow: none;
-    }
+.mb-auto {
+    margin-bottom: auto;
+}
+
+.ms-2 {
+    margin-left: 0.5rem;
+}
+
+.fs-5 {
+    font-size: 1.25rem;
+}
