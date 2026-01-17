@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "QuanLyDiem";
+    string maLopHp = Context.Session.GetString("LuuMaHp");
 
 }
 
@@ -14,7 +15,7 @@
     {
         <link rel="stylesheet" href="~/css/FormNhapDiem.css" asp-append-version="true" />
     }
- 
+
 }
 
 
@@ -46,7 +47,7 @@
         <div class="field">
             <label for="maLopHp">Lớp học phần</label>
             <select id="maLopHp" name="MaLopHP" class="form-control">
-              
+
                 <option value="">-- Chọn lớp học phần --</option>
             </select>
         </div>
@@ -56,13 +57,21 @@
         </div>
     </form>
 </div>
+
+
 @if(ViewBag.ShowNhapDiem == true && ViewBag.DiemModel != null)
+{
+    @await Html.PartialAsync("NhapDiem", (QLDiem.Models.Diem)ViewBag.DiemModel)
+}
+
+@if(ViewBag.ShowSuaDiem == true && ViewBag.DiemModel != null)
 {
     @await Html.PartialAsync("NhapDiem", (QLDiem.Models.Diem)ViewBag.DiemModel)
 }
 
 <div class="table-wrapper">
     <h5>@ViewBag.tenHP</h5>
+
     <table class="table">
         <thead>
             <tr>
@@ -74,6 +83,7 @@
                 <th>Điểm Quá Trình</th>
                 <th>Điểm Cuối Kỳ</th>
                 <th>Điểm TK</th>
+                <th>Kết quả</th>
                 <th></th>
             </tr>
         </thead>
@@ -85,60 +95,105 @@
                         <td colspan="9" class="text-center">Không có sinh viên nào </td>
                     </tr>
                 }else{
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MaSvNavigation.HoTen)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MaSvNavigation.Lop)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MaLopHpNavigation.HocKy)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MaLopHpNavigation.NamHoc)
-                            </td>
-                            <td>
-                                @(item.DiemQt.HasValue ? item.DiemQt.ToString() : "Chưa nhập")
-                            </td>
-                            <td>
-                                @(item.DiemCk.HasValue ? item.DiemCk.ToString() : "Chưa nhập")
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DiemTk)
-                            </td>
-                            <td>
-                                @{
-                                    if(item.DiemQt == null || item.DiemCk == null)
-                                    {
-                                        <a asp-action="Index"
-                                           asp-route-maSv="@item.MaSv"
-                                           asp-route-maLopHp="@item.MaLopHp"
-                                           class="btn btn-nhap-diem">
-                                            Nhập điểm
-                                        </a>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaSvNavigation.MaSv)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaSvNavigation.HoTen)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaSvNavigation.Lop)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaLopHpNavigation.HocKy)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaLopHpNavigation.NamHoc)
+                                </td>
+                                <td>
+                                    @(item.DiemQt.HasValue ? item.DiemQt.ToString() : "Chưa nhập")
+                                </td>
+                                <td>
+                                    @(item.DiemCk.HasValue ? item.DiemCk.ToString() : "Chưa nhập")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DiemTk)
+                                </td>
+                                <td>
+                                    @if(item.KetQua == true){
+                                        <i class="bi bi-check-all"></i>
                                     }
                                     else
                                     {
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        if(item.DiemQt == null || item.DiemCk == null)
+                                        {
+                                            <a asp-action="Index"
+                                               asp-route-maSv="@item.MaSv"
+                                               asp-route-maLopHp="@item.MaLopHp"
+                                               class="btn btn-nhap-diem">
+                                                Nhập điểm
+                                            </a>
+                                        }
+                                        else
+                                        {
                 
-                                <a asp-action="Edit" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a>
-                                <a asp-action="Details" asp-route-id="@item.MaDiem" class="btn btn-ct">Chi Tiết</a>
-                                <a asp-action="Delete" asp-route-id="@item.MaDiem" class="btn btn-xoa">Xóa</a>
-                                }
-                    }
-                </td>
-            </tr>
-        }
+                                    <a asp-action="SuaDiem" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a>
+                              
+                                    }
+                                    }
+                                </td>                           
+                     </tr>
+        }                  
         }
         }
     </tbody>
 </table>
 </div>
+
+<div class="dashboard-footer-row">
+    <!-- KHỐI BIỂU ĐỒ -->
+    <div class="chart-wrap">
+        <div class="chart-card">
+            <h4 class="chart-title">Thống kê kết quả</h4>
+            <div class="chart-main">
+                <div class="pie" data-dat="@ViewBag.PhanTramDat" data-rot="@ViewBag.PhanTramRot">
+                    <span class="pie-center">
+                        <b>@ViewBag.SiSo</b>
+                        <small>SV</small>
+                    </span>
+                </div>
+                <div class="chart-text">
+                    <p>Sĩ số: <b>@ViewBag.SiSo</b></p>
+                    <p class="dat">● @ViewBag.SvDat đạt (@ViewBag.PhanTramDat%)</p>
+                    <p class="rot">● @ViewBag.SvRot rớt (@ViewBag.PhanTramRot%)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KHỐI XUẤT FILE -->
+    <div class="Xuat-file-diem">
+        <h5>Xuất file danh sách sinh viên</h5>
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-warning">
+                @TempData["Error"]
+            </div>
+        }
+        <a class="btn btn-add" asp-action="InBangDiem" asp-route-id="@maLopHp">In bảng điểm</a>
+        <a class="btn btn-add" asp-action="InDsSvRot" asp-route-id="@maLopHp">In danh sách SV rớt</a>
+        <a class="btn btn-add" asp-action="InDsSvDat" asp-route-id="@maLopHp">In danh sách SV đạt</a>
+    </div>
+</div>
+
 
 @section Scripts {
     @{
@@ -146,6 +201,8 @@
     }  
     <script src="~/js/NamHoc.js"></script>
     <script src="~/js/LoadHocPhan.js"></script>
+    <script src="~/js/FormNhapDiem.js"></script>
+    <script src="~/js/ketqua-chart.js"></script>
    
 
 }

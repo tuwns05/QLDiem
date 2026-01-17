@@ -1,0 +1,79 @@
+﻿@model QLDiem.Models.Diem
+
+@{
+    ViewData["Title"] = "Sửa điểm";
+}
+
+
+<h2>Sửa điểm sinh viên</h2>
+<hr />
+
+<div class="diem-container">
+    <div class="thong-tin col-md-6">
+
+        <!-- Thông tin sinh viên -->
+        <div class="info-box mb-3">
+            <h4>Thông tin sinh viên</h4>
+            <table class="table table-borderless">
+                <tr>
+                    <td><strong>Mã SV:</strong></td>
+                    <td>@Model.MaSv</td>
+                </tr>
+                <tr>
+                    <td><strong>Họ tên:</strong></td>
+                    <td>@Model.MaSvNavigation?.HoTen</td>
+                </tr>
+                <tr>
+                    <td><strong>Lớp:</strong></td>
+                    <td>@Model.MaSvNavigation?.Lop</td>
+                </tr>
+                <tr>
+                    <td><strong>Lớp học phần:</strong></td>
+                    <td>@Model.MaLopHpNavigation?.MaLopHp</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="form-nhap">
+        <!-- Form nhập điểm -->
+        <form asp-action="SuaDiem" method="post">
+            @Html.AntiForgeryToken()
+
+            <!-- khóa định danh -->
+            <input type="hidden" asp-for="MaDiem" value="@Model.MaDiem" />
+            <input type="hidden" asp-for="MaSv" name="MaSv" id="MaSv" value="@Model.MaSv" />
+            <input type="hidden" asp-for="MaLopHp" name="MaLopHp" id="MaLopHp" value="@Model.MaLopHp" />
+
+            <div class="form-group mb-3">
+                <label asp-for="DiemQt" class="form-label">Điểm quá trình</label>
+                <input asp-for="DiemQt"
+                       class="form-control"
+                       type="number"
+                       step="0.1"
+                       min="0"
+                       max="10"
+                       required value="@Model.DiemQt"/>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DiemCk" class="form-label">Điểm cuối kỳ</label>
+                <input asp-for="DiemCk"
+                       class="form-control"
+                       type="number"
+                       step="0.1"
+                       min="0"
+                       max="10"
+                       required  value="@Model.DiemCk"/>
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary"> Lưu điểm</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+

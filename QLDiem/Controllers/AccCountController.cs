@@ -2,61 +2,67 @@
     using Microsoft.AspNetCore.Mvc;
     using QLDiem.Models;
 
-    namespace QLDiem.Controllers
+namespace QLDiem.Controllers
+{
+    public class AccCountController : Controller
     {
-        public class AccCountController : Controller
+        private readonly QuanLyDiemContext quanLyDiemContext;
+
+        public AccCountController(QuanLyDiemContext quanLyDiemContext)
         {
-            private readonly QuanLyDiemContext quanLyDiemContext;
+            this.quanLyDiemContext = quanLyDiemContext;
+        }
 
-            public AccCountController (QuanLyDiemContext quanLyDiemContext)
-            {
-                this.quanLyDiemContext = quanLyDiemContext;
-            }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Login(string Username, string Password)
+        {
 
-            public IActionResult Login()
+
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
+                ViewBag.Error = "Vui lòng nhập đầy đủ thông tin";
                 return View();
             }
-            [HttpPost]
-            public IActionResult Login(string Username, string Password)
+
+            var checkTaiKhoan = quanLyDiemContext.TaiKhoans.FirstOrDefault(tk => tk.TenDangNhap == Username && tk.MatKhau == Password);
+
+            if (checkTaiKhoan != null)
             {
-              
-           
-                if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
-                {
-                    ViewBag.Error = "Vui lòng nhập đầy đủ thông tin";
-                    return View();
-                }
-
-                var checkTaiKhoan = quanLyDiemContext.TaiKhoans.FirstOrDefault(tk => tk.TenDangNhap == Username && tk.MatKhau == Password );
-
-                if(checkTaiKhoan != null)
-                {
                 HttpContext.Session.SetString("VaiTro", checkTaiKhoan.VaiTro);
-                    if (!string.IsNullOrEmpty(checkTaiKhoan.MaSv))
-                    {
-                        HttpContext.Session.SetString("MaSV", checkTaiKhoan.MaSv);
-                    }
-                    if(checkTaiKhoan.VaiTro == "admin")
-                    {
-                        return RedirectToAction("Index", "Admin");
-                    
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "QLSinhVien", new {id = checkTaiKhoan.MaSv});
-                    }
+                if (!string.IsNullOrEmpty(checkTaiKhoan.MaSv))
+                {
+                    HttpContext.Session.SetString("MaSV", checkTaiKhoan.MaSv);
                 }
-                ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng";
-                return View();
+                if (checkTaiKhoan.VaiTro == "admin")
+                {
+                    return RedirectToAction("Index", "Admin");
 
+                }
+                else
+                {
+                    return RedirectToAction("Index", "QLSinhVien", new { id = checkTaiKhoan.MaSv });
+                }
             }
-            public IActionResult TestRedirect()
-            {
-                // Thử chuyển hướng trực tiếp
-                return RedirectToAction("Index", "Admin");
-            }
+            ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng";
+            return View();
+
+        }
+        public IActionResult TestRedirect()
+        {
+            // Thử chuyển hướng trực tiếp
+            return RedirectToAction("Index", "Admin");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "AccCount");
 
         }
 
     }
+}

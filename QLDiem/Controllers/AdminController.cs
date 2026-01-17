@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using QLDiem.Models;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office.CustomUI;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace QLDiem.Controllers
 {
@@ -49,20 +52,7 @@ namespace QLDiem.Controllers
             return View();
         }
 
-        // GET: Admin/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
 
-            var diem = await _context.Diems
-                .Include(d => d.MaLopHpNavigation)
-                .Include(d => d.MaSvNavigation)
-                .FirstOrDefaultAsync(m => m.MaDiem == id);
-
-            if (diem == null) return NotFound();
-
-            return View(diem);
-        }
 
         // GET: Admin/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -94,14 +84,59 @@ namespace QLDiem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> SuaDiem(int? id)
+        {
+
+            var diem = _context.Diems
+                .Include(d => d.MaLopHpNavigation)
+                .Include(d => d.MaSvNavigation)
+                .FirstOrDefault(m => m.MaDiem == id);
+            ViewBag.DiemModel = diem;
+            ViewBag.ShowSuaDiem = true;
+
+            return View(diem);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SuaDiem(Diem diem)
+        {
+            if (diem == null) return NotFound();
+            var diemCu = await _context.Diems.FindAsync(diem.MaDiem);
+            if (diemCu == null) return NotFound();
+
+            var lopHocPhan = await _context.LopHocPhans
+                                .Include(l => l.MaHpNavigation)
+                                .FirstOrDefaultAsync(l => l.MaLopHp == diem.MaLopHp);
+            double heSo = lopHocPhan?.MaHpNavigation?.HeSo ?? 1.0;
+
+            diemCu.DiemQt = diem.DiemQt;
+            diemCu.DiemCk = diem.DiemCk;
+            diemCu.DiemTk = tinhDiemTK(heSo, diem.DiemQt.Value, diem.DiemCk.Value);
+            try
+            {
+                _context.Update(diemCu);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("FillLopHP", new { MaLopHP = diem.MaLopHp });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Lỗi khi cập nhật điểm: " + ex.Message);
+                return RedirectToAction("FillLopHP", new { MaLopHP = diem.MaLopHp });
+            }
+        }
         private bool DiemExists(int id)
         {
             return _context.Diems.Any(e => e.MaDiem == id);
         }
 
         // GET: Admin/FillLopHP?MaLopHP=LH001
+
+
         public async Task<IActionResult> FillLopHP(string MaLopHP)
         {
+
             if (string.IsNullOrWhiteSpace(MaLopHP))
             {
                 ViewBag.Message = "Vui lòng chọn lớp học phần";
@@ -115,7 +150,7 @@ namespace QLDiem.Controllers
                                    select hp.TenHp)
                                   .FirstOrDefaultAsync() ?? MaLopHP;
 
-          
+
             var ds = await (from dk in _context.DangKyMonHocs
                             where dk.MaLopHp == MaLopHP
                             join sv in _context.SinhViens on dk.MaSv equals sv.MaSv
@@ -131,11 +166,25 @@ namespace QLDiem.Controllers
                                 DiemQt = diem != null ? diem.DiemQt : (double?)null,
                                 DiemCk = diem != null ? diem.DiemCk : (double?)null,
                                 DiemTk = diem != null ? diem.DiemTk : (double?)null,
+
                                 MaSvNavigation = sv,
+                                KetQua = diem != null && diem.DiemTk >= 4.0,
                                 MaLopHpNavigation = lhp
                             }).ToListAsync();
 
-            // Optionally store current MaLopHP into session so Index can auto-open later
+            //Xử lý thông kê sinh viên đạt và rớt
+            ViewBag.SiSo = ds.Count;
+            ViewBag.SvRot = ds.Count(d => d.KetQua == false);
+            ViewBag.SvDat = ds.Count(d => d.KetQua == true);
+
+            int soSvDat = ds.Count(d => d.KetQua == true);
+            int soSvRot = ds.Count(d => d.KetQua == false);
+
+            double phanTramDat = phanTramSvDat(soSvDat, ds.Count);
+            double phanTramRot = phanTramSvRot(soSvRot, ds.Count);
+            ViewBag.PhanTramDat = phanTramDat;
+            ViewBag.PhanTramRot = phanTramRot;
+
             HttpContext.Session.SetString("LuuMaHp", MaLopHP);
 
             return View("Index", ds);
@@ -163,7 +212,7 @@ namespace QLDiem.Controllers
                 d.DiemTk = tinhDiemTK(heSo, d.DiemQt.Value, d.DiemCk.Value);
                 _context.Add(d);
                 await _context.SaveChangesAsync();
-               // HttpContext.Session.SetString("LuuMaHp", d.MaLopHp);
+                // HttpContext.Session.SetString("LuuMaHp", d.MaLopHp);
                 return RedirectToAction("FillLopHP", new { MaLopHP = d.MaLopHp });
 
             }
@@ -174,6 +223,9 @@ namespace QLDiem.Controllers
             }
 
         }
+
+
+
 
 
         // Trả về danh sách các lớp học phần (MaLopHP) thuộc học kỳ & năm học
@@ -212,12 +264,218 @@ namespace QLDiem.Controllers
         // HÀM TÍNH ĐIỂM TỔNG KẾT
         public double tinhDiemTK(double heSo, double diemQT, double diemCK)
         {
-            
+
             double tyLeQT = heSo / (1 + heSo);
             double tyLeCK = 1 / (1 + heSo);
 
             double diem = diemQT * tyLeQT + diemCK * tyLeCK;
             return Math.Round(diem, 2);
         }
+
+
+        ///Tính % số sinh viên đạt và rớt trong lớp học
+        public double phanTramSvDat(int soSvDat, int tongSoSv)
+        {
+            if (tongSoSv == 0) return 0;
+            return Math.Round(((double)soSvDat / tongSoSv) * 100, 2);
+        }
+
+        public double phanTramSvRot(int soSvRot, int tongSoSv)
+        {
+            if (tongSoSv == 0) return 0;
+            return Math.Round(((double)soSvRot / tongSoSv) * 100, 2);
+        }
+
+
+
+        //THỐNG KÊ
+        //IN BẢNG ĐIỂM CỦA LỚP HỌC PHẦN
+        [HttpGet]
+        public async Task<IActionResult> InBangDiem(string id)
+        {
+            if (id == null)
+            {
+                TempData["Error"] = "Vui lòng chọn lớp học phần";
+                return RedirectToAction("Index");
+            }
+
+            var diem = await _context.Diems
+                .Include(d => d.MaLopHpNavigation)
+                .Include(d => d.MaSvNavigation)
+                .Where(d => d.MaLopHp == id.ToString())
+                .ToListAsync();
+            if (diem == null || !diem.Any())
+            {
+                TempData["Error"] = "Lớp chưa có sinh viên nào có điểm";
+                return RedirectToAction("Index");
+            }
+
+            var lopHocPhan = await _context.LopHocPhans
+                              .Include(l => l.MaHpNavigation)
+                              .FirstOrDefaultAsync(l => l.MaLopHp == id);
+            string tenLopHp = lopHocPhan.MaHpNavigation.TenHp.ToString();
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Danh sách ");
+
+            // Thêm tiêu đề cột
+            worksheet.Cell(1, 1).Value = tenLopHp;
+            worksheet.Cell(2, 1).Value = "Mã Sinh Viên";
+            worksheet.Cell(2, 2).Value = "Họ Tên";
+            worksheet.Cell(2, 3).Value = "Lớp";
+            worksheet.Cell(2, 4).Value = "Điểm Quá Trình";
+            worksheet.Cell(2, 5).Value = "Điểm Cuối Kỳ";
+            worksheet.Cell(2, 6).Value = "Điểm Tổng Kết";
+            worksheet.Cell(2, 7).Value = "Kết Quả";
+
+            // Lấy danh sách điểm
+            int row = 3;
+            foreach (var item in diem)
+            {
+                worksheet.Cell(row, 1).Value = item.MaSv;
+                worksheet.Cell(row, 2).Value = item.MaSvNavigation?.HoTen;
+                worksheet.Cell(row, 3).Value = item.MaSvNavigation?.Lop;
+                worksheet.Cell(row, 4).Value = item.DiemQt;
+                worksheet.Cell(row, 5).Value = item.DiemCk;
+                worksheet.Cell(row, 6).Value = item.DiemTk;
+                worksheet.Cell(row, 7).Value = item.DiemTk >= 4.0 ? "Đạt" : "Rớt";
+
+                row++;
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiem.xlsx");
+            }
+        }
+
+        //IN BẢNG ĐIỂM DANH SÁCH SINH VIÊN RỚT MÔN
+        [HttpGet]
+        public async Task<IActionResult> InDsSvRot(string id)
+        {
+            if (id == null)
+            {
+                TempData["Error"] = "Vui lòng chọn lớp học phần";
+                return RedirectToAction("Index");
+            }
+            var diem = await _context.Diems
+                .Include(d => d.MaLopHpNavigation)
+                .Include(d => d.MaSvNavigation)
+                .Where(d => d.MaLopHp == id.ToString() && d.DiemTk < 4.0)
+                .ToListAsync();
+            if (diem == null || !diem.Any())
+            {
+                TempData["Error"] = "Lớp chưa có sinh viên nào rớt môn";
+                return RedirectToAction("Index");
+            }
+
+            var lopHocPhan = await _context.LopHocPhans
+                              .Include(l => l.MaHpNavigation)
+                              .FirstOrDefaultAsync(l => l.MaLopHp == id);
+            string tenLopHp = lopHocPhan.MaHpNavigation.TenHp.ToString();
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Danh sách ");
+
+            // Thêm tiêu đề cột
+            worksheet.Cell(1, 1).Value = tenLopHp;
+            worksheet.Cell(2, 1).Value = "Mã Sinh Viên";
+            worksheet.Cell(2, 2).Value = "Họ Tên";
+            worksheet.Cell(2, 3).Value = "Lớp";
+            worksheet.Cell(2, 4).Value = "Điểm Quá Trình";
+            worksheet.Cell(2, 5).Value = "Điểm Cuối Kỳ";
+            worksheet.Cell(2, 6).Value = "Điểm Tổng Kết";
+            worksheet.Cell(2, 7).Value = "Kết Quả";
+
+            // Lấy danh sách điểm
+            int row = 3;
+            foreach (var item in diem)
+            {
+                worksheet.Cell(row, 1).Value = item.MaSv;
+                worksheet.Cell(row, 2).Value = item.MaSvNavigation?.HoTen;
+                worksheet.Cell(row, 3).Value = item.MaSvNavigation?.Lop;
+                worksheet.Cell(row, 4).Value = item.DiemQt;
+                worksheet.Cell(row, 5).Value = item.DiemCk;
+                worksheet.Cell(row, 6).Value = item.DiemTk;
+                worksheet.Cell(row, 7).Value = "Rớt";
+
+                row++;
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiem.xlsx");
+            }
+        }
+
+
+        //IN BẢNG ĐIỂM DANH SÁCH SINH VIÊN QUA MÔN
+        [HttpGet]
+        public async Task<IActionResult> InDsSvDat(string id)
+        {
+            if (id == null)
+            {
+                TempData["Error"] = "Vui lòng chọn lớp học phần";
+                return RedirectToAction("Index");
+            }
+            var diem = await _context.Diems
+                .Include(d => d.MaLopHpNavigation)
+                .Include(d => d.MaSvNavigation)
+                .Where(d => d.MaLopHp == id.ToString() && d.DiemTk >= 4.0)
+                .ToListAsync();
+            if (diem == null || !diem.Any())
+            {
+                TempData["Error"] = "Lớp chưa có sinh viên nào qua môn";
+                return RedirectToAction("Index");
+            }
+
+            var lopHocPhan = await _context.LopHocPhans
+                              .Include(l => l.MaHpNavigation)
+                              .FirstOrDefaultAsync(l => l.MaLopHp == id);
+            string tenLopHp = lopHocPhan.MaHpNavigation.TenHp.ToString();
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Danh sách ");
+
+            // Thêm tiêu đề cột
+            worksheet.Cell(1, 1).Value = tenLopHp;
+            worksheet.Cell(2, 1).Value = "Mã Sinh Viên";
+            worksheet.Cell(2, 2).Value = "Họ Tên";
+            worksheet.Cell(2, 3).Value = "Lớp";
+            worksheet.Cell(2, 4).Value = "Điểm Quá Trình";
+            worksheet.Cell(2, 5).Value = "Điểm Cuối Kỳ";
+            worksheet.Cell(2, 6).Value = "Điểm Tổng Kết";
+            worksheet.Cell(2, 7).Value = "Kết Quả";
+
+            // Lấy danh sách điểm
+            int row = 3;
+            foreach (var item in diem)
+            {
+                worksheet.Cell(row, 1).Value = item.MaSv;
+                worksheet.Cell(row, 2).Value = item.MaSvNavigation?.HoTen;
+                worksheet.Cell(row, 3).Value = item.MaSvNavigation?.Lop;
+                worksheet.Cell(row, 4).Value = item.DiemQt;
+                worksheet.Cell(row, 5).Value = item.DiemCk;
+                worksheet.Cell(row, 6).Value = item.DiemTk;
+                worksheet.Cell(row, 7).Value = "Đạt";
+
+                row++;
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiem.xlsx");
+            }
+        }
+
+
     }
-}
+
+       
+    }

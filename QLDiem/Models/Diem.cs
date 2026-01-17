@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLDiem.Models;
 
@@ -20,4 +21,6 @@ public partial class Diem
     public virtual LopHocPhan? MaLopHpNavigation { get; set; }
 
     public virtual SinhVien? MaSvNavigation { get; set; }
+    [NotMapped]
+    public bool? KetQua { get; set; }
 }
