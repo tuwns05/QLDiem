@@ -1,28 +1,73 @@
-﻿
-@{
-    ViewData["Title"] = "Login";
+﻿@{
+    ViewData["Title"] = "Đăng nhập";
     Layout = null;
 }
 
- <head> 
- <link rel="stylesheet" href="~/css/login.css" /> 
- </head> 
-<div class="login-container">
-    <img src="~/img/qnu.jpg" alt="Logo QNU" class="logo">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
 
-    <h2>Đăng nhập</h2>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <div class="divider">
-        <span>_*_</span>
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+</head>
+<body>
+
+    <div class="login-container">
+
+        <!-- LOGO -->
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src="~/img/qnu.jpg"
+                 alt="Logo QNU"
+                 style="max-width:90px; border-radius:10px;" />
+        </div>
+
+        <!-- TITLE -->
+        <h2 class="login-title">Đăng nhập hệ thống</h2>
+        <p class="login-subtitle">Quản lý điểm sinh viên</p>
+
+        <!-- FORM -->
+        <form method="post" asp-action="Login">
+
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text"
+                       name="Username"
+                       class="form-control"
+                       placeholder="Nhập username"
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password"
+                       name="Password"
+                       class="form-control"
+                       placeholder="Nhập password"
+                       required />
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="text-danger">
+                    @ViewBag.Error
+                </div>
+            }
+
+            <button type="submit" class="btn-login">
+                Đăng nhập
+            </button>
+        </form>
+
+        <!-- FOOTER -->
+        <div class="login-footer">
+            <small>© QNU - Hệ thống quản lý điểm</small>
+        </div>
+
     </div>
 
-    <form method="post" asp-action="Login">
-        <input type="text" name="Username" placeholder="Nhập username" />
-        <input type="password" name="Password" placeholder="Nhập password" />
-        <button type="submit">Đăng nhập</button>
-    </form>
-    @if (ViewBag.Error != null)
-    {
-        <div class="text-danger">@ViewBag.Error</div>
-    }
-</div>
+</body>
+</html>

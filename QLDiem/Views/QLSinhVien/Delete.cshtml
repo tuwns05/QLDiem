@@ -4,64 +4,30 @@
     <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
 }
 
-@{
-    ViewData["Title"] = "Xóa sinh viên";
-}
+<div class="form-container">
+    <div class="form-title text-danger">⚠ Xác nhận xóa sinh viên</div>
 
-<div class="page-wrapper">
-
-    <!-- HEADER -->
-    <div class="page-header">
-        <h1 class="text-danger">Xóa sinh viên</h1>
-        <a asp-action="Index" class="btn btn-secondary btn-sm">
-            ← Quay lại
-        </a>
+    <div class="detail-row">
+        <div class="detail-label">Mã SV:</div>
+        <div class="detail-value">@Model.MaSv</div>
     </div>
 
-    <h3 class="mb-20">
-        Bạn có chắc chắn muốn <span class="text-danger">xóa</span> sinh viên này không?
-    </h3>
+    <div class="detail-row">
+        <div class="detail-label">Họ tên:</div>
+        <div class="detail-value">@Model.HoTen</div>
+    </div>
 
-    <hr />
+    <div class="detail-row">
+        <div class="detail-label">Lớp:</div>
+        <div class="detail-value">@Model.Lop</div>
+    </div>
 
-    <!-- THÔNG TIN SINH VIÊN -->
-    <dl class="row">
-        <div>
-            <dt>@Html.DisplayNameFor(model => model.HoTen)</dt>
-            <dd>@Html.DisplayFor(model => model.HoTen)</dd>
-        </div>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaSv" />
 
-        <div>
-            <dt>@Html.DisplayNameFor(model => model.Lop)</dt>
-            <dd>@Html.DisplayFor(model => model.Lop)</dd>
-        </div>
-
-        <div>
-            <dt>@Html.DisplayNameFor(model => model.GioiTinh)</dt>
-            <dd>@Html.DisplayFor(model => model.GioiTinh)</dd>
-        </div>
-
-        <div>
-            <dt>@Html.DisplayNameFor(model => model.NgaySinh)</dt>
-            <dd>@Html.DisplayFor(model => model.NgaySinh)</dd>
-        </div>
-    </dl>
-
-    <hr />
-
-    <!-- ACTION -->
-    <form asp-action="Delete" method="post" class="mt-24">
-        @Html.AntiForgeryToken()
-
-        <div class="action-buttons">
-            <button type="submit" class="btn btn-danger">
-                🗑 Xóa
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary">
-                Hủy
-            </a>
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-back">← Hủy</a>
+            <button type="submit" class="btn-danger-main">Xóa</button>
         </div>
     </form>
-
 </div>

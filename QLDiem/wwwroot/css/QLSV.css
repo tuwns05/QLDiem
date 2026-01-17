@@ -810,3 +810,127 @@ dl.row {
         gap: var(--space-12);
     }
 }
+/* Search student */
+.filter-form {
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+    .filter-form .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .filter-form input,
+    .filter-form select {
+        border-radius: 6px;
+    }
+
+/* ====== FORM CONTAINER ====== */
+.form-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 30px 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* ====== TITLE ====== */
+.form-title {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+/* ====== FORM GROUP ====== */
+.form-group {
+    margin-bottom: 18px;
+}
+
+    .form-group label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: block;
+        color: #34495e;
+    }
+
+.form-control {
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid #dcdfe6;
+    padding: 8px 12px;
+}
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52,152,219,0.15);
+    }
+
+/* ====== BUTTONS ====== */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn-main {
+    background: #3498db;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+}
+
+    .btn-main:hover {
+        background: #2980b9;
+    }
+
+.btn-back {
+    background: #95a5a6;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+    .btn-back:hover {
+        background: #7f8c8d;
+    }
+
+.btn-danger-main {
+    background: #e74c3c;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+}
+
+    .btn-danger-main:hover {
+        background: #c0392b;
+    }
+
+/* ====== DETAILS VIEW ====== */
+.detail-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.detail-label {
+    width: 150px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.detail-value {
+    color: #555;
+}
+

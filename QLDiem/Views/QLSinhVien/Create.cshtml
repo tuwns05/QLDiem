@@ -3,57 +3,41 @@
     <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
 }
 
-@{
-    ViewData["Title"] = "Create";
-}
+<div class="form-container">
+    <div class="form-title">➕ Thêm sinh viên</div>
 
-<h1>Create</h1>
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label>Mã sinh viên</label>
+            <input asp-for="MaSv" class="form-control" />
+        </div>
 
-<h4>SinhVien</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MaSv" class="control-label"></label>
-                <input asp-for="MaSv" class="form-control" />
-                <span asp-validation-for="MaSv" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HoTen" class="control-label"></label>
-                <input asp-for="HoTen" class="form-control" />
-                <span asp-validation-for="HoTen" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lop" class="control-label"></label>
-                <input asp-for="Lop" class="form-control" />
-                <span asp-validation-for="Lop" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GioiTinh" class="control-label"></label>
-                <input asp-for="GioiTinh" class="form-control" />
-                <span asp-validation-for="GioiTinh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NgaySinh" class="control-label"></label>
-                <input asp-for="NgaySinh" class="form-control" />
-                <span asp-validation-for="NgaySinh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        <div class="form-group">
+            <label>Họ tên</label>
+            <input asp-for="HoTen" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Lớp</label>
+            <input asp-for="Lop" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Giới tính</label>
+            <select asp-for="GioiTinh" class="form-control">
+                <option>Nam</option>
+                <option>Nữ</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Ngày sinh</label>
+            <input asp-for="NgaySinh" type="date" class="form-control" />
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-back">← Quay lại</a>
+            <button type="submit" class="btn-main">Lưu</button>
+        </div>
+    </form>
 </div>
-
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">
-        ← Quay lại
-    </a>
-</div>
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

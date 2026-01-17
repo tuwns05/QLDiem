@@ -37,8 +37,16 @@
                 }
             </select>
 
+            <!-- Tìm theo Mã SV -->
+            <input type="text"
+                   name="maSv"
+                   value="@ViewBag.MaSv"
+                   placeholder="🔍 Nhập mã sinh viên"
+                   class="form-control"
+                   style="width:200px; display:inline-block; margin-right:10px;" />
+
             <button type="submit" class="btn btn-primary mr-2">
-                🔍 Lọc
+                🔍 Tìm
             </button>
 
             <a asp-action="Index" class="btn btn-secondary">
@@ -51,6 +59,7 @@
     <table class="table table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
+                <th>Mã SV</th>
                 <th>Họ tên</th>
                 <th>Lớp</th>
                 <th>Giới tính</th>
@@ -64,6 +73,7 @@
                 foreach (var item in Model)
                 {
                     <tr>
+                        <td class="fw-bold text-primary">@item.MaSv</td>
                         <td>@item.HoTen</td>
                         <td>@item.Lop</td>
                         <td>@item.GioiTinh</td>

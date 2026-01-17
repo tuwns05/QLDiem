@@ -18,9 +18,14 @@ namespace QLDiem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string? lop)
+        public async Task<IActionResult> Index(string? lop,string? maSv)
         {
             var query = _context.SinhViens.AsQueryable();
+
+            if (!string.IsNullOrEmpty(maSv))
+            {
+                query = query.Where(sv => sv.MaSv.Contains(maSv));
+            }
 
             if (!string.IsNullOrEmpty(lop))
             {
@@ -34,7 +39,7 @@ namespace QLDiem.Controllers
                 .ToListAsync();
 
             ViewBag.Lop = lop;
-
+            ViewBag.MaSv = maSv;
             return View(await query.ToListAsync());
         }
 
