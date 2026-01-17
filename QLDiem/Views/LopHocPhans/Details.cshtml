@@ -1,36 +1,128 @@
 ﻿@model QLDiem.Models.LopHocPhan
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết lớp học phần";
 }
 
-<h1>Details</h1>
+<h1>Chi tiết lớp học phần</h1>
 
-<div>
-    <h4>LopHocPhan</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HocKy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HocKy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NamHoc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NamHoc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaHpNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaHpNavigation.MaHp)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaLopHp">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="table-wrapper" style="max-width: 900px; margin: 0 auto;">
+    <!-- Thông tin cơ bản -->
+    <div style="background: #f8fafc; padding: 25px; border-radius: 5px; margin-bottom: 25px;">
+        <h4 style="margin: 0 0 20px 0; color: #2c3e50; padding-bottom: 10px; border-bottom: 2px solid #3498db;">
+            📋 Thông tin lớp học phần
+        </h4>
+
+        <div style="display: grid; grid-template-columns: 180px 1fr; gap: 15px; font-size: 0.95rem;">
+            <div style="font-weight: 600; color: #555;">Mã lớp học phần:</div>
+            <div style="color: #2c3e50; font-weight: 500;">@Html.DisplayFor(model => model.MaLopHp)</div>
+
+            <div style="font-weight: 600; color: #555;">Mã học phần:</div>
+            <div style="color: #2c3e50;">@Html.DisplayFor(model => model.MaHpNavigation.MaHp)</div>
+
+            <div style="font-weight: 600; color: #555;">Tên học phần:</div>
+            <div style="color: #2c3e50; font-weight: 500;">@Html.DisplayFor(model => model.MaHpNavigation.TenHp)</div>
+
+            <div style="font-weight: 600; color: #555;">Số tín chỉ:</div>
+            <div style="color: #2c3e50;">@Html.DisplayFor(model => model.MaHpNavigation.SoTinChi)</div>
+
+            <div style="font-weight: 600; color: #555;">Hệ số:</div>
+            <div style="color: #2c3e50;">@Html.DisplayFor(model => model.MaHpNavigation.HeSo)</div>
+
+            <div style="font-weight: 600; color: #555;">Học kỳ:</div>
+            <div style="color: #2c3e50;">Học kỳ @Html.DisplayFor(model => model.HocKy)</div>
+
+            <div style="font-weight: 600; color: #555;">Năm học:</div>
+            <div style="color: #2c3e50;">@Html.DisplayFor(model => model.NamHoc)</div>
+        </div>
+    </div>
+
+    <!-- Danh sách sinh viên đã đăng ký -->
+    @if (Model.DangKyMonHocs != null && Model.DangKyMonHocs.Any())
+    {
+        <div style="background: #e8f4f8; padding: 25px; border-radius: 5px; margin-bottom: 25px;">
+            <h4 style="margin: 0 0 20px 0; color: #2c3e50; padding-bottom: 10px; border-bottom: 2px solid #3498db;">
+                👥 Danh sách sinh viên (@Model.DangKyMonHocs.Count sinh viên)
+            </h4>
+
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="table" style="margin: 0;">
+                    <thead style="position: sticky; top: 0; background: #3498db; z-index: 1;">
+                        <tr>
+                            <th style="width: 50px;">STT</th>
+                            <th style="width: 120px;">Mã SV</th>
+                            <th>Họ và tên</th>
+                            <th style="width: 120px;">Lớp</th>
+                            <th style="width: 150px;">Ngày đăng ký</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int stt = 1;
+                        }
+                        @foreach (var dk in Model.DangKyMonHocs.OrderBy(d => d.MaSv))
+                        {
+                            <tr>
+                                <td style="text-align: center;">@stt</td>
+                                <td>@dk.MaSvNavigation?.MaSv</td>
+                                <td style="font-weight: 500;">@dk.MaSvNavigation?.HoTen</td>
+                                <td>@dk.MaSvNavigation?.Lop</td>
+                                <td>@dk.NgayDangKy?.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                            stt++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="background: #fff3cd; padding: 20px; border-radius: 5px; margin-bottom: 25px; text-align: center; color: #856404;">
+            <strong>⚠️ Chưa có sinh viên nào đăng ký lớp học phần này</strong>
+        </div>
+    }
+
+    <!-- Thống kê điểm (nếu có) -->
+    @if (Model.Diems != null && Model.Diems.Any())
+    {
+        var tongSV = Model.Diems.Count;
+        var daDiem = Model.Diems.Count(d => d.DiemTk != null);
+        var diemTB = Model.Diems.Where(d => d.DiemTk != null).Average(d => d.DiemTk) ?? 0;
+
+        <div style="background: #d4edda; padding: 25px; border-radius: 5px; margin-bottom: 25px;">
+            <h4 style="margin: 0 0 20px 0; color: #2c3e50; padding-bottom: 10px; border-bottom: 2px solid #28a745;">
+                📊 Thống kê điểm
+            </h4>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 5px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #3498db;">@tongSV</div>
+                    <div style="color: #7f8c8d; margin-top: 5px;">Tổng sinh viên</div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 5px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #27ae60;">@daDiem</div>
+                    <div style="color: #7f8c8d; margin-top: 5px;">Đã có điểm</div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 5px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #e67e22;">@diemTB.ToString("F2")</div>
+                    <div style="color: #7f8c8d; margin-top: 5px;">Điểm trung bình</div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Các nút thao tác -->
+    <div style="display: flex; gap: 10px; justify-content: center; padding-top: 20px; border-top: 1px solid #eee;">
+        <a asp-action="Edit" asp-route-id="@Model?.MaLopHp" class="btn btn-sua" style="padding: 10px 25px;">
+            Chỉnh sửa
+        </a>
+        <a asp-action="Delete" asp-route-id="@Model?.MaLopHp" class="btn btn-xoa" style="padding: 10px 25px;">
+            Xóa
+        </a>
+        <a asp-action="Index" class="btn btn-ct" style="padding: 10px 25px;">
+            Quay lại danh sách
+        </a>
+    </div>
 </div>
