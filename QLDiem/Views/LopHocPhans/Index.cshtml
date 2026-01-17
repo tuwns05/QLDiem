@@ -1,8 +1,13 @@
 ﻿@model IEnumerable<QLDiem.Models.LopHocPhan>
+
 @{
     ViewData["Title"] = "Quản lý lớp học phần";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
+}
 <h1>Quản lý lớp học phần</h1>
 
 @if (TempData["SuccessMessage"] != null)
@@ -21,86 +26,115 @@
     </div>
 }
 
-<a asp-action="Create" class="btn-add">+ Thêm lớp học phần mới</a>
-<a asp-action="AddSinhVien" class="btn-add" style="background-color: #9b59b6;">+ Thêm sinh viên vào lớp</a>
+<!-- ===== BUTTON BAR ===== -->
+<div style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+    <a asp-action="Create" class="btn-add">+ Thêm lớp học phần mới</a>
+    <a asp-action="AddSinhVien" class="btn-add" style="background-color:#9b59b6;">
+        + Thêm sinh viên vào lớp
+    </a>
+</div>
 
-<!-- Bộ lọc -->
-<div class="table-wrapper" style="margin-bottom: 20px;">
-    <form asp-action="Index" method="get" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
-        <div style="flex: 1; min-width: 200px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Học kỳ</label>
-            <select name="hocKy" class="form-select" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%;">
+<!-- ===== FILTER BOX ===== -->
+<div class="table-wrapper" style="margin-bottom: 25px;">
+    <form asp-action="Index" method="get"
+          style="display:flex; gap:20px; flex-wrap:wrap; align-items:flex-end;">
+
+        <div style="flex:1; min-width:200px;">
+            <label>Học kỳ</label>
+            <select name="hocKy" class="form-select">
                 <option value="">-- Tất cả --</option>
-                <option value="1" selected="@(ViewBag.HocKy == 1 ? "selected" : null)">Học kỳ 1</option>
-                <option value="2" selected="@(ViewBag.HocKy == 2 ? "selected" : null)">Học kỳ 2</option>
-                <option value="3" selected="@(ViewBag.HocKy == 3 ? "selected" : null)">Học kỳ 3</option>
+                <option value="1" selected="@(ViewBag.HocKy == 1)">Học kỳ 1</option>
+                <option value="2" selected="@(ViewBag.HocKy == 2)">Học kỳ 2</option>
+                <option value="3" selected="@(ViewBag.HocKy == 3)">Học kỳ 3</option>
             </select>
         </div>
 
-        <div style="flex: 1; min-width: 200px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">Năm học</label>
-            <select name="namHoc" class="form-select" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%;">
+        <div style="flex:1; min-width:200px;">
+            <label>Năm học</label>
+            <select name="namHoc" class="form-select">
                 <option value="">-- Tất cả --</option>
-                @if (ViewBag.NamHocList != null)
+                @foreach (var nh in ViewBag.NamHocList ?? new List<string>())
                 {
-                    @foreach (var nh in ViewBag.NamHocList)
-                    {
-                        <option value="@nh" selected="@(ViewBag.NamHoc == nh ? "selected" : null)">@nh</option>
-                    }
+                    <option value="@nh" selected="@(ViewBag.NamHoc == nh)">
+                        @nh
+                    </option>
                 }
             </select>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            <button type="submit" class="btn btn-sua" style="padding: 10px 20px;">Lọc</button>
-            <a asp-action="Index" class="btn btn-ct" style="padding: 10px 20px;">Xóa lọc</a>
+        <div style="display:flex; gap:10px;">
+            <button type="submit" class="btn btn-sua">Lọc</button>
+            <a asp-action="Index" class="btn btn-ct">Xóa lọc</a>
         </div>
     </form>
 </div>
 
-<!-- Bảng dữ liệu -->
+<!-- ===== TABLE ===== -->
 <div class="table-wrapper">
     <table class="table">
         <thead>
             <tr>
-                <th style="width: 120px;">Mã lớp HP</th>
-                <th style="width: 100px;">Học kỳ</th>
-                <th style="width: 120px;">Năm học</th>
-                <th style="width: 100px;">Mã HP</th>
+                <th>Mã lớp HP</th>
+                <th>Học kỳ</th>
+                <th>Năm học</th>
+                <th>Mã HP</th>
                 <th>Tên học phần</th>
-                <th style="width: 100px; text-align: center;">Số SV</th>
-                <th style="width: 220px; text-align: center;">Thao tác</th>
+                <th style="text-align:center;">Số SV</th>
+                <th style="text-align:center;">Thao tác</th>
             </tr>
         </thead>
+
         <tbody>
             @if (Model != null && Model.Any())
             {
-                @foreach (var item in Model)
+                foreach (var item in Model)
                 {
-                    var sinhVienList = item.DangKyMonHocs?.Select(d => d.MaSvNavigation?.HoTen).Where(h => h != null).ToList() ?? new List<string>();
+                    var sinhVienList = item.DangKyMonHocs?
+                    .Select(x => x.MaSvNavigation?.HoTen)
+                    .Where(x => x != null)
+                    .ToList() ?? new List<string>();
+
                     var soSinhVien = sinhVienList.Count;
-                    var danhSachSV = soSinhVien > 0 ? string.Join("\\n", sinhVienList.Select((sv, index) => $"{index + 1}. {sv}")) : "Chưa có sinh viên đăng ký";
 
                     <tr>
                         <td>
-                            <span style="cursor: pointer; font-weight: 600; color: #3498db;"
-                                  title="@danhSachSV.Replace("\\n", "&#10;")">
-                                @Html.DisplayFor(modelItem => item.MaLopHp)
-                            </span>
+                            <strong style="color:#3498db;">
+                                @item.MaLopHp
+                            </strong>
                         </td>
-                        <td>Học kỳ @Html.DisplayFor(modelItem => item.HocKy)</td>
-                        <td>@Html.DisplayFor(modelItem => item.NamHoc)</td>
-                        <td>@Html.DisplayFor(modelItem => item.MaHpNavigation.MaHp)</td>
-                        <td style="font-weight: 500;">@Html.DisplayFor(modelItem => item.MaHpNavigation.TenHp)</td>
-                        <td style="text-align: center;">
-                            <span style="background-color: #3498db; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: 600;">
+
+                        <td>Học kỳ @item.HocKy</td>
+                        <td>@item.NamHoc</td>
+                        <td>@item.MaHpNavigation?.MaHp</td>
+                        <td>@item.MaHpNavigation?.TenHp</td>
+
+                        <td style="text-align:center;">
+                            <span style="
+                                        background:#3498db;
+                                        color:white;
+                                        padding:4px 14px;
+                                        border-radius:20px;
+                                        font-weight:600;
+                                        font-size:0.85rem;">
                                 @soSinhVien
                             </span>
                         </td>
-                        <td style="text-align: center;">
-                            <a asp-action="Edit" asp-route-id="@item.MaLopHp" class="btn btn-sua">Sửa</a>
-                            <a asp-action="Details" asp-route-id="@item.MaLopHp" class="btn btn-ct">Chi tiết</a>
-                            <a asp-action="Delete" asp-route-id="@item.MaLopHp" class="btn btn-xoa">Xóa</a>
+
+                        <td style="text-align:center;">
+                            <a asp-action="Edit"
+                               asp-route-id="@item.MaLopHp"
+                               class="btn btn-sua">Sửa</a>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.MaLopHp"
+                               class="btn btn-ct">Chi tiết</a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.MaLopHp"
+                               class="btn btn-xoa"
+                               onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                Xóa
+                            </a>
                         </td>
                     </tr>
                 }
@@ -108,7 +142,8 @@
             else
             {
                 <tr>
-                    <td colspan="7" style="text-align: center; padding: 40px; color: #95a5a6; font-style: italic;">
+                    <td colspan="7"
+                        style="text-align:center; padding:40px; color:#999;">
                         Không tìm thấy lớp học phần nào
                     </td>
                 </tr>

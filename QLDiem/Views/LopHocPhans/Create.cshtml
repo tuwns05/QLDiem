@@ -1,62 +1,103 @@
 ﻿@model QLDiem.Models.LopHocPhan
+
 @{
     ViewData["Title"] = "Thêm lớp học phần";
 }
-
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
+}
 <h1>Thêm lớp học phần mới</h1>
 
-<div class="table-wrapper" style="max-width: 800px; margin: 0 auto;">
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" style="background: #fee; padding: 15px; border-radius: 5px; margin-bottom: 20px;"></div>
+<div class="table-wrapper" style="max-width:850px; margin:auto;">
 
-        <div style="margin-bottom: 20px;">
-            <label asp-for="MaLopHp" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Mã lớp học phần <span style="color: #e74c3c;">*</span>
-            </label>
-            <input asp-for="MaLopHp" class="form-control" placeholder="VD: LHP001"
-                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;" />
-            <span asp-validation-for="MaLopHp" class="text-danger" style="font-size: 0.85rem;"></span>
+    <form asp-action="Create" method="post">
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger"
+             style="background:#fee; padding:15px; border-radius:8px; margin-bottom:25px;">
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label asp-for="MaHp" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Học phần <span style="color: #e74c3c;">*</span>
+        <!-- ===== MÃ LỚP HP ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Mã lớp học phần <span class="text-danger">*</span>
             </label>
-            <select asp-for="MaHp" asp-items="ViewBag.MaHp" class="form-select"
-                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;">
+
+            <input asp-for="MaLopHp"
+                   class="form-control"
+                   placeholder="VD: LHP001" />
+
+            <span asp-validation-for="MaLopHp" class="text-danger"></span>
+        </div>
+
+        <!-- ===== HỌC PHẦN ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Học phần <span class="text-danger">*</span>
+            </label>
+
+            <select asp-for="MaHp"
+                    asp-items="ViewBag.MaHp"
+                    class="form-select">
                 <option value="">-- Chọn học phần --</option>
             </select>
-            <span asp-validation-for="MaHp" class="text-danger" style="font-size: 0.85rem;"></span>
+
+            <span asp-validation-for="MaHp" class="text-danger"></span>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label asp-for="HocKy" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Học kỳ <span style="color: #e74c3c;">*</span>
+        <!-- ===== HỌC KỲ ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Học kỳ <span class="text-danger">*</span>
             </label>
-            <select asp-for="HocKy" class="form-select"
-                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;">
+
+            <select asp-for="HocKy" class="form-select">
                 <option value="">-- Chọn học kỳ --</option>
                 <option value="1">Học kỳ 1</option>
                 <option value="2">Học kỳ 2</option>
                 <option value="3">Học kỳ 3 (Hè)</option>
             </select>
-            <span asp-validation-for="HocKy" class="text-danger" style="font-size: 0.85rem;"></span>
+
+            <span asp-validation-for="HocKy" class="text-danger"></span>
         </div>
 
-        <div style="margin-bottom: 25px;">
-            <label asp-for="NamHoc" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Năm học <span style="color: #e74c3c;">*</span>
+        <!-- ===== NĂM HỌC ===== -->
+        <div style="margin-bottom:25px;">
+            <label class="form-label fw-semibold">
+                Năm học <span class="text-danger">*</span>
             </label>
-            <input asp-for="NamHoc" class="form-control" placeholder="VD: 2023-2024"
-                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;" />
-            <span asp-validation-for="NamHoc" class="text-danger" style="font-size: 0.85rem;"></span>
-            <small style="color: #7f8c8d; font-size: 0.85rem;">Định dạng: YYYY-YYYY</small>
+
+            <input asp-for="NamHoc"
+                   class="form-control"
+                   placeholder="VD: 2023-2024" />
+
+            <span asp-validation-for="NamHoc" class="text-danger"></span>
+
+            <small class="text-muted">
+                Định dạng: YYYY-YYYY
+            </small>
         </div>
 
-        <div style="display: flex; gap: 10px; padding-top: 20px; border-top: 1px solid #eee;">
-            <button type="submit" class="btn-add" style="margin: 0;">Thêm mới</button>
-            <a asp-action="Index" class="btn btn-ct" style="padding: 10px 20px; display: inline-block;">Hủy</a>
+        <!-- ===== ACTION ===== -->
+        <div style="
+            display:flex;
+            gap:12px;
+            padding-top:20px;
+            border-top:1px solid #eee;">
+
+            <button type="submit"
+                    class="btn-add"
+                    style="margin:0;">
+                ➕ Thêm mới
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-ct">
+                Hủy
+            </a>
         </div>
+
     </form>
 </div>
 

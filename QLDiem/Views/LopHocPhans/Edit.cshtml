@@ -1,83 +1,130 @@
 ﻿@model QLDiem.Models.LopHocPhan
+
 @{
     ViewData["Title"] = "Chỉnh sửa lớp học phần";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
 }
 
 <h1>Chỉnh sửa lớp học phần</h1>
 
-<div class="table-wrapper" style="max-width: 800px; margin: 0 auto;">
+<div class="table-wrapper" style="max-width:850px; margin:auto;">
+
     <form asp-action="Edit" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" style="background: #fee; padding: 15px; border-radius: 5px; margin-bottom: 20px;"></div>
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger"
+             style="background:#fee; padding:15px; border-radius:6px; margin-bottom:25px;">
+        </div>
 
         <input type="hidden" asp-for="MaLopHp" />
 
-        <!-- Thông tin lớp -->
-        <div style="background: #f8fafc; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
-            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 15px; align-items: center;">
-                <div style="font-weight: 600; color: #555;">Mã lớp HP:</div>
-                <div style="color: #2c3e50; font-weight: 500; font-size: 1.1rem;">@Model.MaLopHp</div>
+        <!-- ===== THÔNG TIN LỚP ===== -->
+        <div style="background:#f8fafc; padding:20px; border-radius:8px; margin-bottom:25px;">
+            <div style="display:grid; grid-template-columns:160px 1fr; gap:15px;">
+                <div style="font-weight:600;">Mã lớp học phần:</div>
+                <div style="font-weight:600; color:#3498db; font-size:1.1rem;">
+                    @Model.MaLopHp
+                </div>
             </div>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label asp-for="MaHp" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Học phần <span style="color: #e74c3c;">*</span>
+        <!-- ===== HỌC PHẦN ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Học phần <span class="text-danger">*</span>
             </label>
-            <select asp-for="MaHp" asp-items="ViewBag.MaHp" class="form-select"
-                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;">
+
+            <select asp-for="MaHp"
+                    asp-items="ViewBag.MaHp"
+                    class="form-select">
                 <option value="">-- Chọn học phần --</option>
             </select>
-            <span asp-validation-for="MaHp" class="text-danger" style="font-size: 0.85rem;"></span>
+
+            <span asp-validation-for="MaHp" class="text-danger"></span>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label asp-for="HocKy" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Học kỳ <span style="color: #e74c3c;">*</span>
+        <!-- ===== HỌC KỲ ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Học kỳ <span class="text-danger">*</span>
             </label>
-            <select asp-for="HocKy" class="form-select"
-                    style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;">
+
+            <select asp-for="HocKy" class="form-select">
                 <option value="">-- Chọn học kỳ --</option>
                 <option value="1">Học kỳ 1</option>
                 <option value="2">Học kỳ 2</option>
                 <option value="3">Học kỳ 3 (Hè)</option>
             </select>
-            <span asp-validation-for="HocKy" class="text-danger" style="font-size: 0.85rem;"></span>
+
+            <span asp-validation-for="HocKy" class="text-danger"></span>
         </div>
 
-        <div style="margin-bottom: 25px;">
-            <label asp-for="NamHoc" style="display: block; margin-bottom: 8px; font-weight: 600; color: #555;">
-                Năm học <span style="color: #e74c3c;">*</span>
+        <!-- ===== NĂM HỌC ===== -->
+        <div style="margin-bottom:25px;">
+            <label class="form-label fw-semibold">
+                Năm học <span class="text-danger">*</span>
             </label>
-            <input asp-for="NamHoc" class="form-control" placeholder="VD: 2023-2024"
-                   style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem;" />
-            <span asp-validation-for="NamHoc" class="text-danger" style="font-size: 0.85rem;"></span>
-            <small style="color: #7f8c8d; font-size: 0.85rem;">Định dạng: YYYY-YYYY</small>
+
+            <input asp-for="NamHoc"
+                   class="form-control"
+                   placeholder="VD: 2023-2024" />
+
+            <span asp-validation-for="NamHoc" class="text-danger"></span>
+
+            <small class="text-muted">
+                Định dạng: YYYY-YYYY
+            </small>
         </div>
 
-        @if (Model.DangKyMonHocs != null && Model.DangKyMonHocs.Any())
+        <!-- ===== CẢNH BÁO ===== -->
+        @if (Model.DangKyMonHocs?.Any() == true)
         {
-            <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
-                <strong style="color: #856404;">⚠️ Lưu ý:</strong>
-                <p style="margin: 10px 0 0 0; color: #856404; font-size: 0.9rem;">
-                    Lớp học phần này đã có <strong>@Model.DangKyMonHocs.Count sinh viên</strong> đăng ký.
-                    Hãy cân nhắc kỹ trước khi thay đổi thông tin.
-                </p>
+            <div style="
+                    background:#fff3cd;
+                    padding:15px;
+                    border-radius:8px;
+                    border-left:5px solid #ffc107;
+                    margin-bottom:25px;">
+
+                <strong class="text-warning">
+                    ⚠ Lưu ý
+                </strong>
+
+                <div style="margin-top:8px;">
+                    Lớp học phần này đã có
+                    <strong>@Model.DangKyMonHocs.Count sinh viên</strong>
+                    đăng ký.
+                </div>
             </div>
         }
 
-        <div style="display: flex; gap: 10px; padding-top: 20px; border-top: 1px solid #eee;">
-            <button type="submit" class="btn-add" style="margin: 0; padding: 12px 30px;">
-                Lưu thay đổi
+        <!-- ===== ACTION ===== -->
+        <div style="
+            display:flex;
+            gap:12px;
+            padding-top:20px;
+            border-top:1px solid #eee;">
+
+            <button type="submit" class="btn-add" style="margin:0;">
+                💾 Lưu thay đổi
             </button>
-            <a asp-action="Details" asp-route-id="@Model.MaLopHp" class="btn btn-ct" style="padding: 12px 30px; display: inline-block;">
+
+            <a asp-action="Details"
+               asp-route-id="@Model.MaLopHp"
+               class="btn btn-ct">
                 Hủy
             </a>
         </div>
+
     </form>
 </div>
 
-<div style="text-align: center; margin-top: 20px;">
-    <a asp-action="Index" style="color: #7f8c8d; text-decoration: none; font-size: 0.9rem;">
+<div style="text-align:center; margin-top:25px;">
+    <a asp-action="Index"
+       style="color:#7f8c8d; text-decoration:none;">
         ← Quay lại danh sách
     </a>
 </div>
