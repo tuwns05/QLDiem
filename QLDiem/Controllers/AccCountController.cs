@@ -39,7 +39,7 @@ namespace QLDiem.Controllers
                 }
                 if (checkTaiKhoan.VaiTro == "admin")
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Home");
 
                 }
                 else
