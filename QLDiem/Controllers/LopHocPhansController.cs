@@ -412,5 +412,92 @@ namespace QLDiem.Controllers
         {
             return _context.LopHocPhans.Any(e => e.MaLopHp == id);
         }
+
+        //Get mở view mở lớp học phần
+        public async Task<IActionResult> MoLopHp()
+        {
+            ViewBag.HocPhans = await _context.HocPhans.ToListAsync();
+
+            return View();
+        }
+        // Post mở lớp học phần
+        [HttpPost]
+        public async Task<IActionResult> MoLopHp(MoLopVM ml)
+        {
+            var hocPhan = await _context.HocPhans.ToListAsync();
+
+            ViewBag.HocPhans = await _context.HocPhans.ToListAsync();
+            bool check = await _context.MoLopHocPhans
+                .AnyAsync(x => x.HocKy == ml.HocKy && x.NamHoc == ml.NamHoc);
+            if (ml.NgayDong < ml.NgayMo)
+            {
+                TempData["Error"] = "ngày đóng phải lớn hơn ngày mở";
+                return View();
+            }
+            if (ml.NgayMo < DateTime.Now)
+            {
+                TempData["Error"] = "Không thể mở lớp ngày nhỏ hơn hiện tại";
+                return View();
+            }
+            if (check)
+            {
+                TempData["Error"] = "học kỳ này đã mở đăng ký";
+                return View();
+
+            }
+            else
+            {
+                var dsMoLop = hocPhan.Select(hp => new MoLopHocPhan
+                {
+                    MaHp = hp.MaHp,
+                    HocKy = ml.HocKy,
+                    NamHoc = ml.NamHoc,
+                    SoLuong = ml.SoLuong,
+                    SoLuongHienTai = 0,
+                    NgayMo = ml.NgayMo,
+                    NgayDong = ml.NgayDong
+                }).ToList();
+                _context.MoLopHocPhans.AddRange(dsMoLop);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Mở lớp học phần thành công";
+                return View();
+            }
+
+
+
+        }
+
+        //HIỂN THỊ DANH SÁCH LỚP HỌC PHÂN ĐANG MỞ
+        public async Task<IActionResult> DsLopDangMo()
+        {
+            var dsMoLopHp = await _context.MoLopHocPhans
+                .Include(m => m.MaHpNavigation)
+                .ToListAsync();
+            ViewBag.ngayDong = dsMoLopHp.FirstOrDefault()?.NgayDong;
+
+            if (dsMoLopHp == null || !dsMoLopHp.Any())
+            {
+                TempData["Error"] = "Chưa có lớp học phần nào được mở";
+                return View();
+            }
+            return View(dsMoLopHp);
+
+        }
+
+        //CHỈNH SỬA SỐ LƯỢNG
+        [HttpPost]
+        public async Task<IActionResult> CapNhatSL(int MaMoLop, int SoLuong)
+        {
+            var moLopHp = await _context.MoLopHocPhans.FindAsync(MaMoLop);
+            if (moLopHp == null)
+            {
+                return NotFound();
+            }
+
+            moLopHp.SoLuong = SoLuong;
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Cập nhật số lượng thành công";
+            return RedirectToAction("DsLopDangMo");
+        }
     }
 }

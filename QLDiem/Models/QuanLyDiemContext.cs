@@ -27,6 +27,8 @@ public partial class QuanLyDiemContext : DbContext
 
     public virtual DbSet<LopHocPhan> LopHocPhans { get; set; }
 
+    public virtual DbSet<MoLopHocPhan> MoLopHocPhans { get; set; }
+
     public virtual DbSet<SinhVien> SinhViens { get; set; }
 
     public virtual DbSet<TaiKhoan> TaiKhoans { get; set; }
@@ -181,6 +183,26 @@ public partial class QuanLyDiemContext : DbContext
                 .HasForeignKey(d => d.MaHp)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LopHP_HocPhan");
+        });
+
+        modelBuilder.Entity<MoLopHocPhan>(entity =>
+        {
+            entity.HasKey(e => e.MaMoLop).HasName("PK__MoLopHoc__180232613E41476C");
+
+            entity.ToTable("MoLopHocPhan");
+
+            entity.Property(e => e.MaHp)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MaHP");
+            entity.Property(e => e.NamHoc).HasMaxLength(20);
+            entity.Property(e => e.NgayDong).HasColumnType("datetime");
+            entity.Property(e => e.NgayMo).HasColumnType("datetime");
+
+            entity.HasOne(d => d.MaHpNavigation).WithMany(p => p.MoLopHocPhans)
+                .HasForeignKey(d => d.MaHp)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MoLopHocPhan_HocPhan");
         });
 
         modelBuilder.Entity<SinhVien>(entity =>
