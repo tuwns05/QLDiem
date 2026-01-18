@@ -1,0 +1,63 @@
+﻿@model IEnumerable<QLDiem.Models.DiemSinhVienVm>
+
+    @{
+            ViewData["Title"] = "Quản lý điểm sinh viên";
+            Layout = "_Layoutsv";
+    }
+<table class="table table-bordered table-hover align-middle text-center">
+    <thead class="table-primary">
+        <tr>
+            <th>STT</th>
+            <th>Tên học phần</th>
+            <th>TC</th>
+            <th>Học kỳ</th>
+            <th>Năm học</th>
+            <th>Điểm QT</th>
+            <th>Điểm CK</th>
+            <th>Điểm TK</th>
+            <th>Kết quả</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int stt = 1;
+        }
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@stt</td>
+                <td class="text-start">@item.TenHp</td>
+                <td>@item.SoTinChi</td>
+                <td>@item.HocKy</td>
+                <td>@item.NamHoc</td>
+
+                <td>
+                    @(item.DiemQt.HasValue ? item.DiemQt.Value.ToString("0.0") : "--")
+                </td>
+                <td>
+                    @(item.DiemCk.HasValue ? item.DiemCk.Value.ToString("0.0") : "--")
+                </td>
+                <td>
+                    @(item.DiemTk.HasValue ? item.DiemTk.Value.ToString("0.0") : "--")
+                </td>
+
+                <td>
+                    @if (item.DiemTk == null)
+                    {
+                        <span class="badge bg-secondary">Chưa có</span>
+                    }
+                    else if (item.KetQua)
+                    {
+                        <span class="badge bg-success">Đạt</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Rớt</span>
+                    }
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>

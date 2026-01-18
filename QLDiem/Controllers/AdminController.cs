@@ -83,7 +83,7 @@ namespace QLDiem.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        //GET SỬA ĐIỂM
         public async Task<IActionResult> SuaDiem(int? id)
         {
 
@@ -98,6 +98,7 @@ namespace QLDiem.Controllers
 
         }
 
+        //SỬA ĐIỂM
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SuaDiem(Diem diem)
@@ -201,9 +202,9 @@ namespace QLDiem.Controllers
                                 .Include(l => l.MaHpNavigation)
                                 .FirstOrDefaultAsync(l => l.MaLopHp == d.MaLopHp);
 
-                double heSo = 1.0; // Giá trị mặc định
+                double heSo = 1.0; 
 
-                // Kiểm tra nhiều cấp độ null
+       
                 if (lopHocPhan?.MaHpNavigation?.HeSo != null)
                 {
                     heSo = lopHocPhan.MaHpNavigation.HeSo.Value;
@@ -212,8 +213,12 @@ namespace QLDiem.Controllers
                 d.DiemTk = tinhDiemTK(heSo, d.DiemQt.Value, d.DiemCk.Value);
                 _context.Add(d);
                 await _context.SaveChangesAsync();
-                // HttpContext.Session.SetString("LuuMaHp", d.MaLopHp);
+                HttpContext.Session.SetString("LuuMaHp", d.MaLopHp);
+
+                await CapNhatGpa(d.MaDiem, lopHocPhan.HocKy, lopHocPhan.NamHoc);
                 return RedirectToAction("FillLopHP", new { MaLopHP = d.MaLopHp });
+
+                
 
             }
             catch (DbUpdateException ex)
@@ -223,7 +228,84 @@ namespace QLDiem.Controllers
             }
 
         }
+        //HÀM CẬP NHẬT ĐIỂM GPA
+        public async Task CapNhatGpa(int maDiem, int hocKy, string namHoc)
+        {
+            var diem = await _context.Diems.Include(d=>d.MaLopHpNavigation).ThenInclude(l=> l.MaHpNavigation)
+                        .FirstOrDefaultAsync(d => d.MaDiem == maDiem);
 
+            if (diem == null) return;
+
+
+            var maSV = diem.MaSv;
+            //++++Tính điểm Gpa học kỳ
+            var diemHocKy = await _context.Diems
+               .Include(d => d.MaLopHpNavigation)
+                   .ThenInclude(l => l.MaHpNavigation)
+               .Where(d => d.MaSv == maSV &&
+                           d.MaLopHpNavigation.HocKy == hocKy &&
+                           d.MaLopHpNavigation.NamHoc == namHoc &&
+                           d.DiemTk.HasValue)
+               .ToListAsync();
+
+            double tongDiemHK = 0;
+            int soTChocKy = 0;
+
+            foreach (var item in diemHocKy)
+            {
+                var soTC = item.MaLopHpNavigation.MaHpNavigation.SoTinChi;
+                tongDiemHK += (double)(item.DiemTk.Value * soTC);
+                soTChocKy += (int)soTC;
+
+            }
+            double gpaHocKy = soTChocKy > 0 ? tongDiemHK / soTChocKy : 0;
+
+            //++++Tính điểm Gpa tích lũy
+            var tatCaDiem = await _context.Diems
+                .Include(d => d.MaLopHpNavigation)
+                    .ThenInclude(l => l.MaHpNavigation)
+                .Where(d => d.MaSv == maSV && d.DiemTk.HasValue)
+                .ToListAsync();
+
+            double tongDiemTL = 0;
+            int soTCTichLuy = 0;
+
+            foreach (var item in tatCaDiem)
+            {
+                var soTC = item.MaLopHpNavigation.MaHpNavigation.SoTinChi;
+                tongDiemTL += (double)(item.DiemTk.Value * soTC);
+                soTCTichLuy += (int)soTC;
+            }
+
+            double gpaTichLuy = soTCTichLuy > 0 ? tongDiemTL / soTCTichLuy : 0;
+
+            // Cập nhật hoặc thêm mới bảng Gpa
+            var gpaCheck = await _context.Gpas.FirstOrDefaultAsync(g => g.MaSv == maSV && g.HocKy == hocKy && g.NamHoc == namHoc);
+            if (gpaCheck == null)
+            {
+                
+                gpaCheck  = new Gpa
+                {
+                
+                    MaSv = maSV,
+                    HocKy = hocKy,
+                    NamHoc = namHoc,
+                     GpaHocKy = gpaHocKy,
+                     GpaTichLuy = gpaTichLuy,
+                    SoTcHocKy = soTChocKy,
+                   SoTcTichLuy = soTCTichLuy
+                };
+                _context.Gpas.Add(gpaCheck);
+            }
+            else
+            {
+                gpaCheck.GpaHocKy = gpaHocKy;
+                gpaCheck.GpaTichLuy = gpaTichLuy;
+                gpaCheck.SoTcHocKy = soTChocKy;
+                gpaCheck.SoTcTichLuy = soTCTichLuy;
+            }
+            await _context.SaveChangesAsync();
+        }
 
 
 

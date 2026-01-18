@@ -13,7 +13,13 @@ public partial class Gpa
 
     public string? NamHoc { get; set; }
 
-    public double? Gpa1 { get; set; }
+    public double? GpaTichLuy { get; set; }
+
+    public double? GpaHocKy { get; set; }
+
+    public int? SoTcHocKy { get; set; }
+
+    public int? SoTcTichLuy { get; set; }
 
     public virtual SinhVien? MaSvNavigation { get; set; }
 }

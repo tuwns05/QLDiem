@@ -33,7 +33,7 @@ public partial class QuanLyDiemContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=THEN;Database=QuanLyDiem;Trusted_Connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-IUIOQFKS\\VIETTUAN;Database=QuanLyDiem;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -85,7 +85,6 @@ public partial class QuanLyDiemContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("MaSV");
-       
 
             entity.HasOne(d => d.MaLopHpNavigation).WithMany(p => p.Diems)
                 .HasForeignKey(d => d.MaLopHp)
@@ -128,7 +127,8 @@ public partial class QuanLyDiemContext : DbContext
             entity.HasIndex(e => new { e.MaSv, e.HocKy, e.NamHoc }, "UQ_GPA").IsUnique();
 
             entity.Property(e => e.MaGpa).HasColumnName("MaGPA");
-            entity.Property(e => e.Gpa1).HasColumnName("GPA");
+            entity.Property(e => e.GpaHocKy).HasColumnName("GPA_HocKy");
+            entity.Property(e => e.GpaTichLuy).HasColumnName("GPA_TichLuy");
             entity.Property(e => e.MaSv)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -136,6 +136,8 @@ public partial class QuanLyDiemContext : DbContext
             entity.Property(e => e.NamHoc)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+            entity.Property(e => e.SoTcHocKy).HasColumnName("SoTC_HocKy");
+            entity.Property(e => e.SoTcTichLuy).HasColumnName("SoTC_TichLuy");
 
             entity.HasOne(d => d.MaSvNavigation).WithMany(p => p.Gpas)
                 .HasForeignKey(d => d.MaSv)
@@ -216,10 +218,6 @@ public partial class QuanLyDiemContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.VaiTro).HasMaxLength(20);
-
-            entity.HasOne(d => d.MaSvNavigation).WithMany(p => p.TaiKhoans)
-                .HasForeignKey(d => d.MaSv)
-                .HasConstraintName("FK_TK_SV");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -14,6 +14,4 @@ public partial class TaiKhoan
     public string? VaiTro { get; set; }
 
     public string? MaSv { get; set; }
-
-    public virtual SinhVien? MaSvNavigation { get; set; }
 }

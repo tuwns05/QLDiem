@@ -1,8 +1,37 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="ten-de-tai">
+   <h2>HỆ THỐNG QUẢN LÝ ĐIỂM CHO SINH VIÊN</h2>
 </div>
+
+<div class="dieu-huong-page">
+      <a class="btn btn-dieu-huong" asp-controller="Admin" asp-action="Index">Quản lý điểm</a>
+        <a class="btn btn-dieu-huong" asp-controller="LopHocPhans" asp-action="Index">Quản lý Lớp Học Phần </a>
+          <a class="btn btn-dieu-huong" asp-controller="QLSinhVien" asp-action="Index">Quản lý sinh viên</a>
+</div>
+<div class="img-qnu">
+    <img src="~/img/cong-qnu.jpg"/>
+</div>
+
+<div class="thong-tin-tv">
+    <h5>Thành viên nhóm</h5>
+
+    <div class="team-grid">
+        <div class="avatar-box">
+            <img src="~/img/z7220786401419_42fff75414fe725a4476a84da8eea9a8.jpg" />
+            <p class="avatar-name">Trần Việt Tuấn</p>
+        </div>
+
+        <div class="avatar-box">
+            <img src="~/img/thenv2.jpg" />
+            <p class="avatar-name">Trương Quang Thanh</p>
+        </div>
+
+        <div class="avatar-box">
+            <img src="~/img/datadu.jpg" />
+            <p class="avatar-name"> Trần Quang Đạt</p>
+        </div>
+    </div>
+</div>
+
