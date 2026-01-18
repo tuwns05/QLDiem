@@ -5,7 +5,7 @@
 
 @{
     ViewData["Title"] = "Chi tiết sinh viên";
-    var danhSachDiem = ViewBag.DanhSachDiem as List<QLDiem.Models.Diem>;
+    var diemSV = ViewBag.DiemSV as List<DiemSinhVienVm>;    
 }
 
 <h2>Thông tin sinh viên</h2>
@@ -37,36 +37,64 @@
 
 <h3>Bảng điểm</h3>
 
-@if (danhSachDiem != null && danhSachDiem.Any())
+@if (diemSV != null && diemSV.Any())
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Lớp học phần</th>
-                <th>Điểm QT</th>
-                <th>Điểm CK</th>
-                <th>Điểm TK</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var d in danhSachDiem)
-            {
+    var nhomHocKy = diemSV
+        .GroupBy(d => new { d.HocKy, d.NamHoc })
+        .OrderBy(g => g.Key.HocKy);
+
+    foreach (var hk in nhomHocKy)
+    {
+        <h4 class="mt-4 text-primary">
+            Học kỳ @hk.Key.HocKy - Năm học @hk.Key.NamHoc
+        </h4>
+
+        <table class="table table-bordered text-center">
+            <thead class="table-secondary">
                 <tr>
-                    <td>@d.MaLopHp</td>
-                    <td>@d.DiemQt</td>
-                    <td>@d.DiemCk</td>
-                    <td>@d.DiemTk</td>
+                    <th class="text-primary">Tên học phần</th>
+                    <th class="text-primary">TC</th>
+                    <th class="text-primary">QT</th>
+                    <th class="text-primary">CK</th>
+                    <th class="text-primary">TK</th>
+                    <th class="text-primary">Kết quả</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in hk)
+                {
+                    <tr>
+                        <td class="text-start">@item.TenHp</td>
+                        <td>@item.SoTinChi</td>
+                        <td>@(item.DiemQt?.ToString("0.0") ?? "--")</td>
+                        <td>@(item.DiemCk?.ToString("0.0") ?? "--")</td>
+                        <td>@(item.DiemTk?.ToString("0.0") ?? "--")</td>
+                        <td>
+                            @if (item.DiemTk == null)
+                            {
+                                <span class="badge bg-secondary">Chưa có</span>
+                            }
+                            else if (item.KetQua)
+                            {
+                                <span class="badge bg-success">Đạt</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Rớt</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }
 else
 {
     <p class="text-muted">Sinh viên chưa có điểm.</p>
 }
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">
-        ← Quay lại
-    </a>
-</div>
+
+
+<a asp-action="Index" class="btn btn-secondary mt-3">
+    ← Quay lại
+</a>
