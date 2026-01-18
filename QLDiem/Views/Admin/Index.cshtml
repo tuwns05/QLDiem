@@ -26,8 +26,7 @@
     <form class="fill-form" method="get" asp-action="FillLopHP">
         <div class="field">
             <label for="hoc_ky">Học kỳ</label>
-            <select id="hoc_ky" name="hocKy">
-                <!-- Sửa name thành hocKy -->
+            <select id="hoc_ky" name="hocKy">           
                 <option value="">-- Chọn học kỳ --</option>
                 <option value="1">Học kỳ 1</option>
                 <option value="2">Học kỳ 2</option>
@@ -38,7 +37,6 @@
         <div class="field">
             <label for="nam_hoc">Năm học</label>
             <select id="nam_hoc" name="namHoc">
-                <!-- Sửa name thành namHoc -->
                 <option value="">-- Chọn năm học --</option>
                 <!-- Options sẽ được sinh bằng JS -->
             </select>
@@ -92,7 +90,7 @@
                 if(Model ==null || !Model.Any())
                 {
                     <tr>
-                        <td colspan="9" class="text-center">Không có sinh viên nào </td>
+                        <td colspan="9" class="text-center">Vui lòng chọn lớp học phần </td>
                     </tr>
                 }else{
                         @foreach (var item in Model)

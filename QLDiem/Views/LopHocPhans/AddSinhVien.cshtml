@@ -1,0 +1,90 @@
+﻿@model QLDiem.Models.DangKyMonHoc
+
+@{
+    ViewData["Title"] = "Thêm sinh viên vào lớp học phần";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
+}
+<h1>Thêm sinh viên vào lớp học phần</h1>
+
+<div class="table-wrapper" style="max-width:720px; margin:auto;">
+
+    <form asp-action="AddSinhVien" method="post">
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger"
+             style="background:#fee; padding:15px; border-radius:8px; margin-bottom:25px;">
+        </div>
+
+        <!-- ===== LỚP HỌC PHẦN ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Lớp học phần <span class="text-danger">*</span>
+            </label>
+
+            <select asp-for="MaLopHp"
+                    asp-items="ViewBag.MaLopHp"
+                    class="form-select">
+                <option value="">-- Chọn lớp học phần --</option>
+            </select>
+
+            <span asp-validation-for="MaLopHp" class="text-danger"></span>
+        </div>
+
+        <!-- ===== SINH VIÊN ===== -->
+        <div style="margin-bottom:25px;">
+            <label class="form-label fw-semibold">
+                Sinh viên <span class="text-danger">*</span>
+            </label>
+
+            <select asp-for="MaSv"
+                    asp-items="ViewBag.MaSv"
+                    class="form-select">
+                <option value="">-- Chọn sinh viên --</option>
+            </select>
+
+            <span asp-validation-for="MaSv" class="text-danger"></span>
+        </div>
+
+        <!-- ===== LƯU Ý ===== -->
+        <div style="
+            background:#e8f4f8;
+            padding:18px;
+            border-radius:10px;
+            margin-bottom:25px;">
+
+            <strong style="color:#2c3e50;">📌 Lưu ý</strong>
+
+            <p style="margin-top:8px; font-size:0.9rem; color:#555;">
+                Hệ thống sẽ tự động thiết lập học kỳ, năm học và ngày đăng ký
+                theo lớp học phần được chọn.
+            </p>
+        </div>
+
+        <!-- ===== ACTION ===== -->
+        <div style="
+            display:flex;
+            gap:12px;
+            padding-top:20px;
+            border-top:1px solid #eee;">
+
+            <button type="submit" class="btn-add" style="margin:0;">
+                ➕ Thêm sinh viên
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-ct">
+                Hủy
+            </a>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

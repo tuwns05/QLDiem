@@ -22,6 +22,4 @@ public partial class SinhVien
     public virtual ICollection<Diem> Diems { get; set; } = new List<Diem>();
 
     public virtual ICollection<Gpa> Gpas { get; set; } = new List<Gpa>();
-
-    public virtual ICollection<TaiKhoan> TaiKhoans { get; set; } = new List<TaiKhoan>();
 }

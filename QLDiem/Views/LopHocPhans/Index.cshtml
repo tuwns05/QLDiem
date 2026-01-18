@@ -1,47 +1,153 @@
 ﻿@model IEnumerable<QLDiem.Models.LopHocPhan>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý lớp học phần";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.HocKy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NamHoc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaHpNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.HocKy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NamHoc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaHpNavigation.MaHp)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaLopHp">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaLopHp">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaLopHp">Delete</a>
-            </td>
-        </tr>
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
 }
-    </tbody>
-</table>
+<h1>Quản lý lớp học phần</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- ===== BUTTON BAR ===== -->
+<div style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+    <a asp-action="Create" class="btn-add">+ Thêm lớp học phần mới</a>
+    <a asp-action="AddSinhVien" class="btn-add" style="background-color:#9b59b6;">
+        + Thêm sinh viên vào lớp
+    </a>
+</div>
+
+<!-- ===== FILTER BOX ===== -->
+<div class="table-wrapper" style="margin-bottom: 25px;">
+    <form asp-action="Index" method="get"
+          style="display:flex; gap:20px; flex-wrap:wrap; align-items:flex-end;">
+
+        <div style="flex:1; min-width:200px;">
+            <label>Học kỳ</label>
+            <select name="hocKy" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="1" selected="@(ViewBag.HocKy == 1)">Học kỳ 1</option>
+                <option value="2" selected="@(ViewBag.HocKy == 2)">Học kỳ 2</option>
+                <option value="3" selected="@(ViewBag.HocKy == 3)">Học kỳ 3</option>
+            </select>
+        </div>
+
+        <div style="flex:1; min-width:200px;">
+            <label>Năm học</label>
+            <select name="namHoc" class="form-select">
+                <option value="">-- Tất cả --</option>
+                @foreach (var nh in ViewBag.NamHocList ?? new List<string>())
+                {
+                    <option value="@nh" selected="@(ViewBag.NamHoc == nh)">
+                        @nh
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <button type="submit" class="btn btn-sua">Lọc</button>
+            <a asp-action="Index" class="btn btn-ct">Xóa lọc</a>
+        </div>
+    </form>
+</div>
+
+<!-- ===== TABLE ===== -->
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Mã lớp HP</th>
+                <th>Học kỳ</th>
+                <th>Năm học</th>
+                <th>Mã HP</th>
+                <th>Tên học phần</th>
+                <th style="text-align:center;">Số SV</th>
+                <th style="text-align:center;">Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    var sinhVienList = item.DangKyMonHocs?
+                    .Select(x => x.MaSvNavigation?.HoTen)
+                    .Where(x => x != null)
+                    .ToList() ?? new List<string>();
+
+                    var soSinhVien = sinhVienList.Count;
+
+                    <tr>
+                        <td>
+                            <strong style="color:#3498db;">
+                                @item.MaLopHp
+                            </strong>
+                        </td>
+
+                        <td>Học kỳ @item.HocKy</td>
+                        <td>@item.NamHoc</td>
+                        <td>@item.MaHpNavigation?.MaHp</td>
+                        <td>@item.MaHpNavigation?.TenHp</td>
+
+                        <td style="text-align:center;">
+                            <span style="
+                                        background:#3498db;
+                                        color:white;
+                                        padding:4px 14px;
+                                        border-radius:20px;
+                                        font-weight:600;
+                                        font-size:0.85rem;">
+                                @soSinhVien
+                            </span>
+                        </td>
+
+                        <td style="text-align:center;">
+                            <a asp-action="Edit"
+                               asp-route-id="@item.MaLopHp"
+                               class="btn btn-sua">Sửa</a>
+
+                            <a asp-action="Details"
+                               asp-route-id="@item.MaLopHp"
+                               class="btn btn-ct">Chi tiết</a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@item.MaLopHp"
+                               class="btn btn-xoa"
+                               onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                Xóa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7"
+                        style="text-align:center; padding:40px; color:#999;">
+                        Không tìm thấy lớp học phần nào
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

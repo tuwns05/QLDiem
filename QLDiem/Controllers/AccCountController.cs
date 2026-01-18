@@ -35,16 +35,16 @@ namespace QLDiem.Controllers
                 HttpContext.Session.SetString("VaiTro", checkTaiKhoan.VaiTro);
                 if (!string.IsNullOrEmpty(checkTaiKhoan.MaSv))
                 {
-                    HttpContext.Session.SetString("MaSV", checkTaiKhoan.MaSv);
+                    HttpContext.Session.SetString("MaSv", checkTaiKhoan.MaSv);
                 }
                 if (checkTaiKhoan.VaiTro == "admin")
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Home");
 
                 }
                 else
                 {
-                    return RedirectToAction("Index", "QLSinhVien", new { id = checkTaiKhoan.MaSv });
+                    return RedirectToAction("Index", "PageSinhVien", new { id = checkTaiKhoan.MaSv });
                 }
             }
             ViewBag.Error = "Tên đăng nhập hoặc mật khẩu không đúng";

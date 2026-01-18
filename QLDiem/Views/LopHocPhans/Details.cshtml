@@ -1,36 +1,146 @@
 ﻿@model QLDiem.Models.LopHocPhan
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết lớp học phần";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
 }
 
-<h1>Details</h1>
+<h1>Chi tiết lớp học phần</h1>
 
-<div>
-    <h4>LopHocPhan</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HocKy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HocKy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NamHoc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NamHoc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaHpNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaHpNavigation.MaHp)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaLopHp">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="table-wrapper" style="max-width: 950px; margin: auto;">
+
+    <!-- ================= THÔNG TIN LỚP ================= -->
+    <div style="background:#f8fafc; padding:25px; border-radius:10px; margin-bottom:30px;">
+
+        <h4 style="
+            margin-bottom:20px;
+            padding-bottom:12px;
+            border-bottom:2px solid #3498db;
+            color:#2c3e50;">
+            📋 Thông tin lớp học phần
+        </h4>
+
+        <div style="
+            display:grid;
+            grid-template-columns:180px 1fr;
+            gap:15px;
+            font-size:0.95rem;">
+
+            <div><b>Mã lớp học phần:</b></div>
+            <div style="color:#3498db; font-weight:600;">@Model.MaLopHp</div>
+
+            <div><b>Mã học phần:</b></div>
+            <div>@Model.MaHpNavigation?.MaHp</div>
+
+            <div><b>Tên học phần:</b></div>
+            <div style="font-weight:600;">@Model.MaHpNavigation?.TenHp</div>
+
+            <div><b>Số tín chỉ:</b></div>
+            <div>@Model.MaHpNavigation?.SoTinChi</div>
+
+            <div><b>Hệ số:</b></div>
+            <div>@Model.MaHpNavigation?.HeSo</div>
+
+            <div><b>Học kỳ:</b></div>
+            <div>Học kỳ @Model.HocKy</div>
+
+            <div><b>Năm học:</b></div>
+            <div>@Model.NamHoc</div>
+
+        </div>
+    </div>
+
+    <!-- ================= DANH SÁCH SINH VIÊN ================= -->
+    @if (Model.DangKyMonHocs?.Any() == true)
+    {
+        <div style="background:#ffffff; padding:25px; border-radius:10px; margin-bottom:30px;">
+
+            <h4 style="
+                    margin-bottom:20px;
+                    padding-bottom:12px;
+                    border-bottom:2px solid #3498db;
+                    color:#2c3e50;">
+                👥 Danh sách sinh viên (@Model.DangKyMonHocs.Count)
+            </h4>
+
+            <div style="max-height:420px; overflow:auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">STT</th>
+                            <th style="width:130px;">Mã SV</th>
+                            <th>Họ và tên</th>
+                            <th style="width:120px;">Lớp</th>
+                            <th style="width:160px;">Ngày đăng ký</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            int stt = 1;
+                        }
+
+                        @foreach (var dk in Model.DangKyMonHocs.OrderBy(x => x.MaSv))
+                        {
+                            <tr>
+                                <td style="text-align:center;">@stt</td>
+                                <td>@dk.MaSvNavigation?.MaSv</td>
+                                <td style="font-weight:600;">
+                                    @dk.MaSvNavigation?.HoTen
+                                </td>
+                                <td>@dk.MaSvNavigation?.Lop</td>
+                                <td>
+                                    @dk.NgayDangKy?.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="
+                background:#fff3cd;
+                padding:20px;
+                border-radius:8px;
+                margin-bottom:30px;
+                text-align:center;
+                color:#856404;">
+            ⚠️ Chưa có sinh viên nào đăng ký lớp học phần này
+        </div>
+    }
+
+    <!-- ================= ACTION BUTTON ================= -->
+    <div style="
+        display:flex;
+        justify-content:center;
+        gap:12px;
+        padding-top:20px;
+        border-top:1px solid #eee;">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.MaLopHp"
+           class="btn btn-sua">
+            ✏️ Chỉnh sửa
+        </a>
+
+        <a asp-action="Delete"
+           asp-route-id="@Model.MaLopHp"
+           class="btn btn-xoa"
+           onclick="return confirm('Bạn chắc chắn muốn xóa lớp học phần này?')">
+            🗑 Xóa
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-ct">
+            ← Quay lại
+        </a>
+    </div>
+
 </div>
