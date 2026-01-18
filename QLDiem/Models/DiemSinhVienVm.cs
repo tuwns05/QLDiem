@@ -6,7 +6,7 @@
 
         public string MaHp { get; set; }
         public string TenHp { get; set; }
-        public int SoTinChi { get; set; }
+        public int? SoTinChi { get; set; }
 
         public int HocKy { get; set; }
         public string NamHoc { get; set; }
