@@ -61,14 +61,123 @@ namespace QLDiem.Controllers
                ).ToListAsync();
 
             return View(diemSV);
+        }
+        [HttpGet]
+        public ActionResult DangKyLHP()
+        {
+            var ds = _context.MoLopHocPhans.Include(m => m.MaHpNavigation).ToList();
+            if (ds == null)
+            {
+                TempData["Error1"] = "Không có lớp học phần nào đang mở";
+                return View();
+            }
 
+            return View(ds);
+        }
 
-      
+        [HttpPost]
+        public async Task<IActionResult> DangKyLHP(int maMoLop)
+        {
+            bool SvDaDk = true;
+            var maSv = HttpContext.Session.GetString("MaSv");
 
+            var lop = _context.MoLopHocPhans.FirstOrDefault(m => m.MaMoLop == maMoLop);
 
+            var checkLHP = _context.LopHocPhans.FirstOrDefault(l => l.MaHp == lop.MaHp && l.HocKy == lop.HocKy && l.NamHoc == lop.NamHoc);
+            if (checkLHP != null)
+            {
+
+                var checkSvDk = _context.DangKyMonHocs.FirstOrDefault(dk => dk.MaSv == maSv && dk.MaLopHp == checkLHP.MaLopHp);
+                if (checkSvDk == null)
+                {
+                    SvDaDk = false;
+                }
+            }
+            else
+            {
+                SvDaDk = false;
+            }
+
+            if (SvDaDk)
+            {
+                TempData["Error"] = "Bạn đã đăng ký lớp học phần này rồi!";
+                var dsAfterError = _context.MoLopHocPhans.Include(m => m.MaHpNavigation).ToList();
+                return View(dsAfterError);
+            }
+            if (checkLHP == null)
+            {
+                await ThemLHP(lop.MaHp, lop.HocKy, lop.NamHoc);
+                var checkAfter = _context.LopHocPhans.FirstOrDefault(l => l.MaHp == lop.MaHp && l.HocKy == lop.HocKy && l.NamHoc == lop.NamHoc);
+                await AddSVDangKy(maSv, lop.HocKy, lop.NamHoc, DateTime.Now, checkAfter.MaLopHp);
+                await UpdateSL(maMoLop);
+                TempData["Success"] = "Đăng ký lớp học phần thành công!";
+            }
+            else
+            {
+                await AddSVDangKy(maSv, lop.HocKy, lop.NamHoc, DateTime.Now, checkLHP.MaLopHp);
+                await UpdateSL(maMoLop);
+                TempData["Success"] = "Đăng ký lớp học phần thành công!";
+            }
+            var dsAfterAddSV = _context.MoLopHocPhans.Include(m => m.MaHpNavigation).ToList();
+            return View(dsAfterAddSV);
+
+        }
+        //Thêm một lớp học phần mới khi chưa có sinh viên nào học, khi có sinh viên đăng ký
+        //nà chưa có lớp sẽ thêm lớp mới vào
+        public async Task ThemLHP(string maHp, int hocKy, string namHoc)
+        {
+            string maLopHp;
+            do
+            {
+                maLopHp = "LHP" + Random.Shared.Next(100000, 999999);
+            }
+            while (await _context.LopHocPhans
+                         .AnyAsync(l => l.MaLopHp == maLopHp));
+            var hpMoi = new LopHocPhan
+            {
+                MaLopHp = maLopHp,
+                MaHp = maHp,
+                HocKy = hocKy,
+                NamHoc = namHoc
+
+            };
+
+            _context.LopHocPhans.Add(hpMoi);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateSL(int maMoLop)
+        {
+            var moLop = _context.MoLopHocPhans.FirstOrDefault(m => m.MaMoLop == maMoLop);
+            if (moLop != null)
+            {
+                moLop.SoLuongHienTai += 1;
+                _context.MoLopHocPhans.Update(moLop);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddSVDangKy(string maSv, int hocKy, string namHoc, DateTime dateNow, string maLopHp)
+        {
+            var svDangKy = new DangKyMonHoc
+            {
+                MaSv = maSv,
+                MaLopHp = maLopHp,
+                HocKy = hocKy,
+                NamHoc = namHoc,
+                NgayDangKy = dateNow
+            };
+            _context.DangKyMonHocs.Add(svDangKy);
+            await _context.SaveChangesAsync();
         }
 
 
+        public IActionResult BackIndexSv(String id)
+        {
+            return RedirectToAction("Index", "PageSinhVien", new { id });
 
+
+
+        }
     }
 }
