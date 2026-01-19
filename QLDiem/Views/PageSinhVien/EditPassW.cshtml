@@ -1,86 +1,105 @@
 ﻿@model QLDiem.Models.TaiKhoan
 @{
     ViewData["Title"] = "Đổi mật khẩu";
+    Layout = "_Layoutsv";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
 }
 
-<h2 class="mb-4">🔐 Đổi mật khẩu</h2>
+<div class="sv-wrapper">
 
-<div class="card shadow-sm" style="max-width: 600px;">
-    <div class="card-body p-4">
-        <form asp-action="EditPassW" method="post">
-            @Html.AntiForgeryToken()
+    <div class="sv-container">
 
-            <!-- Validation Summary -->
-            <div asp-validation-summary="ModelOnly"
-                 class="alert alert-danger"
-                 role="alert"></div>
+        <!-- HEADER -->
+        <div class="sv-header">
+            <div class="sv-header-icon">🔐</div>
+            <h2 class="sv-header-title">Đổi mật khẩu</h2>
+            <p class="sv-header-subtitle">
+                Cập nhật mật khẩu để bảo mật tài khoản
+            </p>
+        </div>
 
-            <!-- Mật khẩu hiện tại -->
-            <div class="mb-3">
-                <label asp-for="CurrentPassword" class="form-label fw-semibold">
-                    Mật khẩu hiện tại <span class="text-danger">*</span>
-                </label>
-                <input asp-for="CurrentPassword"
-                       type="password"
-                       class="form-control"
-                       placeholder="Nhập mật khẩu hiện tại"
-                       autocomplete="current-password" />
-                <span asp-validation-for="CurrentPassword" class="text-danger"></span>
-            </div>
+        <!-- CONTENT -->
+        <div class="sv-content">
 
-            <!-- Mật khẩu mới -->
-            <div class="mb-3">
-                <label asp-for="NewPassword" class="form-label fw-semibold">
-                    Mật khẩu mới <span class="text-danger">*</span>
-                </label>
-                <input asp-for="NewPassword"
-                       type="password"
-                       class="form-control"
-                       placeholder="Nhập mật khẩu mới"
-                       autocomplete="new-password" />
-                <span asp-validation-for="NewPassword" class="text-danger"></span>
-                <small class="form-text text-muted">
-                    Mật khẩu phải có ít nhất 6 ký tự
-                </small>
-            </div>
+            <form asp-action="EditPassW" method="post">
+                @Html.AntiForgeryToken()
 
-            <!-- Xác nhận mật khẩu mới -->
-            <div class="mb-4">
-                <label asp-for="ConfirmPassword" class="form-label fw-semibold">
-                    Xác nhận mật khẩu mới <span class="text-danger">*</span>
-                </label>
-                <input asp-for="ConfirmPassword"
-                       type="password"
-                       class="form-control"
-                       placeholder="Nhập lại mật khẩu mới"
-                       autocomplete="new-password" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
+                <!-- Validation -->
+                <div asp-validation-summary="ModelOnly"
+                     class="sv-alert sv-alert-danger">
+                </div>
 
-            <!-- Lưu ý bảo mật -->
-            <div class="alert alert-info mb-4">
-                <strong>📌 Lưu ý bảo mật:</strong>
-                <ul class="mb-0 mt-2" style="font-size: 0.9rem;">
-                    <li>Không chia sẻ mật khẩu với người khác</li>
-                    <li>Sử dụng mật khẩu mạnh và duy nhất</li>
-                    <li>Thay đổi mật khẩu định kỳ</li>
-                </ul>
-            </div>
+                <!-- Mật khẩu hiện tại -->
+                <div class="sv-form-group">
+                    <label asp-for="CurrentPassword" class="sv-form-label">
+                        Mật khẩu hiện tại <span class="required">*</span>
+                    </label>
+                    <input asp-for="CurrentPassword"
+                           type="password"
+                           class="sv-form-control"
+                           autocomplete="current-password" />
+                    <span asp-validation-for="CurrentPassword" class="sv-error"></span>
+                </div>
 
-            <!-- Buttons -->
-            <div class="d-flex gap-2 pt-3 border-top">
-                <button type="submit" class="btn btn-warning">
-                    🔑 Đổi mật khẩu
-                </button>
-                <a asp-action="Profile" class="btn btn-secondary">
-                    ← Quay lại
-                </a>
-            </div>
-        </form>
+                <!-- Mật khẩu mới -->
+                <div class="sv-form-group">
+                    <label asp-for="NewPassword" class="sv-form-label">
+                        Mật khẩu mới <span class="required">*</span>
+                    </label>
+                    <input asp-for="NewPassword"
+                           type="password"
+                           class="sv-form-control"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="NewPassword" class="sv-error"></span>
+
+                    <div class="sv-form-helper">
+                        Ít nhất 6 ký tự, nên có chữ hoa và số
+                    </div>
+                </div>
+
+                <!-- Xác nhận -->
+                <div class="sv-form-group">
+                    <label asp-for="ConfirmPassword" class="sv-form-label">
+                        Xác nhận mật khẩu <span class="required">*</span>
+                    </label>
+                    <input asp-for="ConfirmPassword"
+                           type="password"
+                           class="sv-form-control"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="sv-error"></span>
+                </div>
+
+                <!-- ALERT -->
+                <div class="sv-alert sv-alert-info">
+                    <div>
+                        <strong>Lưu ý bảo mật</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Không chia sẻ mật khẩu</li>
+                            <li>Không dùng mật khẩu cũ</li>
+                            <li>Thay đổi định kỳ</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="sv-actions">
+                    <button type="submit" class="sv-btn sv-btn-warning">
+                        🔑 Đổi mật khẩu
+                    </button>
+
+                    <a asp-controller="PageSinhVien"
+                       asp-action="Profile"
+                       class="btn btn-secondary">
+                        Quay lại
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
     </div>
 </div>
 

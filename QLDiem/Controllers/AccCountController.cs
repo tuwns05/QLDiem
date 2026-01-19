@@ -58,15 +58,7 @@ namespace QLDiem.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login", "AccCount");
         }
-    
-        public async Task<IActionResult> Profile()
-        {
-            var maSV = HttpContext.Session.GetString("MaSv");
-            var sv = await quanLyDiemContext.SinhViens
-                .FirstOrDefaultAsync(s => s.MaSv == maSV);
-            return View(sv);
-        }
-
+ 
         public IActionResult EditPassW()
         {
             var maSV = HttpContext.Session.GetString("MaSv");
@@ -77,7 +69,7 @@ namespace QLDiem.Controllers
                 return RedirectToAction("Login");
             }
 
-            return View(new TaiKhoan());
+            return View("~/Views/PageSinhVien/EditPassW.cshtml");
         }
 
         [HttpPost]
@@ -151,7 +143,7 @@ namespace QLDiem.Controllers
                 await quanLyDiemContext.SaveChangesAsync();
 
                 TempData["Success"] = "Đổi mật khẩu thành công!";
-                return RedirectToAction("Profile");
+                return RedirectToAction("Profile", "PageSinhVien");
             }
             catch (Exception ex)
             {
@@ -167,7 +159,7 @@ namespace QLDiem.Controllers
                 .FirstOrDefaultAsync(s => s.MaSv == maSV);
             if (sv == null)
                 return NotFound();
-            return View(sv);
+            return View("~/Views/PageSinhVien/EditTTSV.cshtml", sv);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -205,7 +197,7 @@ namespace QLDiem.Controllers
             HttpContext.Session.SetString("HoTen", sv.HoTen ?? "");
 
             TempData["Success"] = "Cập nhật thông tin thành công";
-            return RedirectToAction("Profile");
+            return RedirectToAction("Profile", "PageSinhVien");
         }
     }
 }

@@ -1,81 +1,93 @@
-﻿@{
+﻿@model QLDiem.Models.SinhVien
+@{
     ViewData["Title"] = "Hồ sơ sinh viên";
+    Layout = "_Layoutsv";
 }
 
-<h1>Hồ sơ sinh viên</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
 
-<div class="table-wrapper" style="max-width:800px; margin:auto;">
+<div class="sv-wrapper">
 
-    <!-- ================= THÔNG TIN SINH VIÊN ================= -->
-    <div style="background:#f8fafc; padding:30px; border-radius:12px;">
+    <div class="sv-container">
 
-        <h4 style="
-            margin-bottom:25px;
-            padding-bottom:12px;
-            border-bottom:2px solid #3498db;
-            color:#2c3e50;">
-            👤 Thông tin cá nhân
-        </h4>
+        <!-- HEADER -->
+        <div class="sv-header">
+            <div class="sv-header-icon">👤</div>
+            <h2 class="sv-header-title">Hồ sơ sinh viên</h2>
+            <p class="sv-header-subtitle">
+                Thông tin cá nhân và tài khoản
+            </p>
+        </div>
 
-        <div style="
-            display:grid;
-            grid-template-columns:180px 1fr;
-            gap:18px;
-            font-size:0.95rem;">
+        <!-- CONTENT -->
+        <div class="sv-content">
 
-            <div><b>Mã sinh viên</b></div>
-            <div style="color:#3498db; font-weight:600;">
-                @Model.MaSv
+            <!-- THÔNG TIN SINH VIÊN -->
+            <div class="sv-info-section">
+
+                <div class="sv-section-title">
+                    👤 Thông tin cá nhân
+                </div>
+
+                <div class="sv-info-grid">
+
+                    <div class="sv-info-label">Mã sinh viên</div>
+                    <div class="sv-info-value highlight">
+                        @Model.MaSv
+                    </div>
+
+                    <div class="sv-info-label">Họ và tên</div>
+                    <div class="sv-info-value">
+                        @Model.HoTen
+                    </div>
+
+                    <div class="sv-info-label">Lớp</div>
+                    <div class="sv-info-value">
+                        @Model.Lop
+                    </div>
+
+                    <div class="sv-info-label">Giới tính</div>
+                    <div class="sv-info-value">
+                        @Model.GioiTinh
+                    </div>
+
+                    <div class="sv-info-label">Ngày sinh</div>
+                    <div class="sv-info-value">
+                        @Model.NgaySinh?.ToString("dd/MM/yyyy")
+                    </div>
+
+                </div>
             </div>
 
-            <div><b>Họ và tên</b></div>
-            <div style="font-weight:600;">
-                @Model.HoTen
-            </div>
+            <div class="sv-divider"></div>
 
-            <div><b>Lớp</b></div>
-            <div>@Model.Lop</div>
+            <!-- ACTIONS -->
+            <div class="sv-actions">
 
-            <div><b>Giới tính</b></div>
-            <div>@Model.GioiTinh</div>
+                <a asp-controller="AccCount"
+                   asp-action="EditTTSV"
+                   asp-route-id="@Model.MaSv"
+                   class="sv-btn sv-btn-success">
+                    ✏️ Đổi thông tin
+                </a>
 
-            <div><b>Ngày sinh</b></div>
-            <div>
-                @Model.NgaySinh?.ToString("dd/MM/yyyy")
+                <a asp-controller="AccCount"
+                   asp-action="EditPassW"
+                   class="sv-btn sv-btn-warning">
+                    🔐 Đổi mật khẩu
+                </a>
+
+                <a asp-controller="PageSinhVien"
+                   asp-action="Index"
+                   asp-route-id="@Context.Session.GetString("MaSv")"
+                   class="sv-btn sv-btn-secondary">
+                    ← Quay lại
+                </a>
+
             </div>
 
         </div>
     </div>
-
-    <!-- ================= ACTION ================= -->
-    <div style="
-        display:flex;
-        justify-content:center;
-        gap:14px;
-        padding-top:25px;
-        border-top:1px solid #eee;
-        margin-top:25px;">
-
-        <a asp-action="EditTTSV"
-           asp-route-id="@Model.MaSv"
-           class="btn btn-sua"
-           style="background:#27ae60;">
-            ✏️ Đổi thông tin
-        </a>
-
-        <a asp-action="EditPassW"
-           class="btn btn-xoa"
-           style="background:#f39c12;">
-            🔐 Đổi mật khẩu
-        </a>
-
-        <a asp-controller="PageSinhVien"
-           asp-action="Index"
-           asp-route-id="@Context.Session.GetString("MaSv")"
-           class="btn btn-ct"
-           style="background:#7f8c8d;">
-            ← Quay lại
-        </a>
-    </div>
-
 </div>
