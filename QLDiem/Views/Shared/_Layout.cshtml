@@ -62,16 +62,17 @@
                                 <span class="menu-text ms-2">Quản lý sinh viên</span>
                             </a>
                         </li>
-                        <div class="btn-logout">
-                            <a class="nav-link" asp-area="" asp-controller="AccCount" asp-action="Logout">
-                                <i class="bi bi-box-arrow-right fs-5"></i>
-                                <span class="menu-text ms-2">Logout</span>
-                            </a>
-                        </div>
+                      
                     </ul>
                 </div>
+                <div class="btn-logout">
+                    <a class="nav-link" asp-area="" asp-controller="AccCount" asp-action="Logout">
+                        <i class="bi bi-box-arrow-right fs-5"></i>
+                        <span class="menu-text ms-2">Logout</span>
+                    </a>
+                </div>
             </nav>
-
+          
            
             <main class="main-content">
                 @RenderBody()

@@ -51,11 +51,7 @@ namespace QLDiem.Controllers
             return View();
 
         }
-        public IActionResult TestRedirect()
-        {
-            // Thử chuyển hướng trực tiếp
-            return RedirectToAction("Index", "Admin");
-        }
+       
 
         public IActionResult Logout()
         {

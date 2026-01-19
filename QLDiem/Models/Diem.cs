@@ -17,6 +17,7 @@ public partial class Diem
     public double? DiemTk { get; set; }
 
     public string? MaLopHp { get; set; }
+   
     [NotMapped]
     public bool? KetQua { get; set; }
     public virtual LopHocPhan? MaLopHpNavigation { get; set; }

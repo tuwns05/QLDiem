@@ -47,29 +47,54 @@ namespace QLDiem.Controllers
         // GET: QLSinhVien/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var sinhVien = await _context.SinhViens
-                .FirstOrDefaultAsync(m => m.MaSv == id);
-            if (sinhVien == null)
-            {
-                return NotFound();
-            }
-            ViewBag.DanhSachDiem = await _context.Diems
-                .Where(d => d.MaSv == id)
-                .ToListAsync();
+                .FirstOrDefaultAsync(sv => sv.MaSv == id);
+
+            if (sinhVien == null) return NotFound();
+
+            var diemSV = await (
+                from dk in _context.DangKyMonHocs
+                where dk.MaSv == id
+
+                join lhp in _context.LopHocPhans
+                    on dk.MaLopHp equals lhp.MaLopHp
+
+                join hp in _context.HocPhans
+                    on lhp.MaHp equals hp.MaHp
+
+                join d in _context.Diems
+                    on new { dk.MaSv, dk.MaLopHp }
+                    equals new { d.MaSv, d.MaLopHp }
+                    into dg
+                from diem in dg.DefaultIfEmpty()
+
+                select new DiemSinhVienVm
+                {
+                    MaSv = dk.MaSv,
+                    MaHp = hp.MaHp,
+                    TenHp = hp.TenHp,
+                    SoTinChi = hp.SoTinChi,
+
+                    HocKy = lhp.HocKy,
+                    NamHoc = lhp.NamHoc,
+
+                    DiemQt = diem != null ? diem.DiemQt : null,
+                    DiemCk = diem != null ? diem.DiemCk : null,
+                    DiemTk = diem != null ? diem.DiemTk : null,
+
+                    KetQua = diem != null && diem.DiemTk >= 4
+                }
+            ).ToListAsync();
+
+            ViewBag.DiemSV = diemSV;
 
             return View(sinhVien);
         }
 
-        // GET: QLSinhVien/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+
+
 
         // POST: QLSinhVien/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
