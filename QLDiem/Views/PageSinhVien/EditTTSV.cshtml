@@ -1,0 +1,68 @@
+﻿@model QLDiem.Models.SinhVien
+@{
+    ViewData["Title"] = "Đổi thông tin sinh viên";
+}
+
+<h2 class="mb-4">Đổi thông tin sinh viên</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-action="EditTTSV" method="post">
+            @Html.AntiForgeryToken()
+
+            <!-- Mã SV (chỉ đọc) -->
+            <div class="mb-3">
+                <label class="form-label">Mã sinh viên</label>
+                <input class="form-control" value="@Model.MaSv" readonly />
+                <input type="hidden" asp-for="MaSv" />
+            </div>
+
+            <!-- Họ tên -->
+            <div class="mb-3">
+                <label asp-for="HoTen" class="form-label"></label>
+                <input asp-for="HoTen" class="form-control" />
+                <span asp-validation-for="HoTen" class="text-danger"></span>
+            </div>
+
+            <!-- Lớp -->
+            <div class="mb-3">
+                <label asp-for="Lop" class="form-label"></label>
+                <input asp-for="Lop" class="form-control" />
+            </div>
+
+            <!-- Giới tính -->
+            <div class="mb-3">
+                <label asp-for="GioiTinh" class="form-label"></label>
+                <select asp-for="GioiTinh" class="form-select">
+                    <option value="">-- Chọn giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select>
+            </div>
+
+            <!-- Ngày sinh -->
+            <div class="mb-3">
+                <label asp-for="NgaySinh" class="form-label"></label>
+                <input asp-for="NgaySinh" type="date" class="form-control" />
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    Lưu thay đổi
+                </button>
+
+                <a asp-action="Profile" class="btn btn-secondary">
+                    Quay lại
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Hồ sơ sinh viên";
+}
+
+<h1>Hồ sơ sinh viên</h1>
+
+<div class="table-wrapper" style="max-width:800px; margin:auto;">
+
+    <!-- ================= THÔNG TIN SINH VIÊN ================= -->
+    <div style="background:#f8fafc; padding:30px; border-radius:12px;">
+
+        <h4 style="
+            margin-bottom:25px;
+            padding-bottom:12px;
+            border-bottom:2px solid #3498db;
+            color:#2c3e50;">
+            👤 Thông tin cá nhân
+        </h4>
+
+        <div style="
+            display:grid;
+            grid-template-columns:180px 1fr;
+            gap:18px;
+            font-size:0.95rem;">
+
+            <div><b>Mã sinh viên</b></div>
+            <div style="color:#3498db; font-weight:600;">
+                @Model.MaSv
+            </div>
+
+            <div><b>Họ và tên</b></div>
+            <div style="font-weight:600;">
+                @Model.HoTen
+            </div>
+
+            <div><b>Lớp</b></div>
+            <div>@Model.Lop</div>
+
+            <div><b>Giới tính</b></div>
+            <div>@Model.GioiTinh</div>
+
+            <div><b>Ngày sinh</b></div>
+            <div>
+                @Model.NgaySinh?.ToString("dd/MM/yyyy")
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= ACTION ================= -->
+    <div style="
+        display:flex;
+        justify-content:center;
+        gap:14px;
+        padding-top:25px;
+        border-top:1px solid #eee;
+        margin-top:25px;">
+
+        <a asp-action="EditTTSV"
+           asp-route-id="@Model.MaSv"
+           class="btn btn-sua"
+           style="background:#27ae60;">
+            ✏️ Đổi thông tin
+        </a>
+
+        <a asp-action="EditPassW"
+           class="btn btn-xoa"
+           style="background:#f39c12;">
+            🔐 Đổi mật khẩu
+        </a>
+
+        <a asp-controller="PageSinhVien"
+           asp-action="Index"
+           asp-route-id="@Context.Session.GetString("MaSv")"
+           class="btn btn-ct"
+           style="background:#7f8c8d;">
+            ← Quay lại
+        </a>
+    </div>
+
+</div>

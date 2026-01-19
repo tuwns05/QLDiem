@@ -1,0 +1,91 @@
+﻿@model QLDiem.Models.TaiKhoan
+@{
+    ViewData["Title"] = "Đổi mật khẩu";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
+}
+
+<h2 class="mb-4">🔐 Đổi mật khẩu</h2>
+
+<div class="card shadow-sm" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form asp-action="EditPassW" method="post">
+            @Html.AntiForgeryToken()
+
+            <!-- Validation Summary -->
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger"
+                 role="alert"></div>
+
+            <!-- Mật khẩu hiện tại -->
+            <div class="mb-3">
+                <label asp-for="CurrentPassword" class="form-label fw-semibold">
+                    Mật khẩu hiện tại <span class="text-danger">*</span>
+                </label>
+                <input asp-for="CurrentPassword"
+                       type="password"
+                       class="form-control"
+                       placeholder="Nhập mật khẩu hiện tại"
+                       autocomplete="current-password" />
+                <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+            </div>
+
+            <!-- Mật khẩu mới -->
+            <div class="mb-3">
+                <label asp-for="NewPassword" class="form-label fw-semibold">
+                    Mật khẩu mới <span class="text-danger">*</span>
+                </label>
+                <input asp-for="NewPassword"
+                       type="password"
+                       class="form-control"
+                       placeholder="Nhập mật khẩu mới"
+                       autocomplete="new-password" />
+                <span asp-validation-for="NewPassword" class="text-danger"></span>
+                <small class="form-text text-muted">
+                    Mật khẩu phải có ít nhất 6 ký tự
+                </small>
+            </div>
+
+            <!-- Xác nhận mật khẩu mới -->
+            <div class="mb-4">
+                <label asp-for="ConfirmPassword" class="form-label fw-semibold">
+                    Xác nhận mật khẩu mới <span class="text-danger">*</span>
+                </label>
+                <input asp-for="ConfirmPassword"
+                       type="password"
+                       class="form-control"
+                       placeholder="Nhập lại mật khẩu mới"
+                       autocomplete="new-password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <!-- Lưu ý bảo mật -->
+            <div class="alert alert-info mb-4">
+                <strong>📌 Lưu ý bảo mật:</strong>
+                <ul class="mb-0 mt-2" style="font-size: 0.9rem;">
+                    <li>Không chia sẻ mật khẩu với người khác</li>
+                    <li>Sử dụng mật khẩu mạnh và duy nhất</li>
+                    <li>Thay đổi mật khẩu định kỳ</li>
+                </ul>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2 pt-3 border-top">
+                <button type="submit" class="btn btn-warning">
+                    🔑 Đổi mật khẩu
+                </button>
+                <a asp-action="Profile" class="btn btn-secondary">
+                    ← Quay lại
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

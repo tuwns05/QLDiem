@@ -85,102 +85,33 @@ namespace QLDiem.Controllers
         // GET: LopHocPhans/Create
         public IActionResult Create()
         {
-            ViewData["MaHp"] = new SelectList(_context.HocPhans, "MaHp", "TenHp");
             return View();
         }
 
         // POST: LopHocPhans/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaLopHp,MaHp,HocKy,NamHoc")] LopHocPhan lopHocPhan)
+        public async Task<IActionResult> Create(HocPhan hocPhan)
         {
-            ModelState.Remove("MaHpNavigation");
-            // Validation
-            if (string.IsNullOrWhiteSpace(lopHocPhan.MaLopHp))
-                ModelState.AddModelError("MaLopHp", "Mã lớp học phần không được để trống");
-
-            if (string.IsNullOrWhiteSpace(lopHocPhan.MaHp))
-                ModelState.AddModelError("MaHp", "Vui lòng chọn học phần");
-
-            if (lopHocPhan.HocKy < 1 || lopHocPhan.HocKy > 3)
-                ModelState.AddModelError("HocKy", "Học kỳ phải từ 1 đến 3");
-
-            if (string.IsNullOrWhiteSpace(lopHocPhan.NamHoc))
-                ModelState.AddModelError("NamHoc", "Năm học không được để trống");
-            else
+            if (ModelState.IsValid)
             {
-                // Validate format năm học
-                var parts = lopHocPhan.NamHoc.Split('-');
-                if (parts.Length != 2 ||
-                    !int.TryParse(parts[0], out int y1) ||
-                    !int.TryParse(parts[1], out int y2) ||
-                    y2 != y1 + 1)
-                {
-                    ModelState.AddModelError("NamHoc", "Năm học phải có định dạng YYYY-YYYY (VD: 2023-2024)");
-                }
-            }
-
-            // Kiểm tra trùng mã
-            if (!string.IsNullOrWhiteSpace(lopHocPhan.MaLopHp))
-            {
-                var exists = await _context.LopHocPhans
-                    .AnyAsync(l => l.MaLopHp == lopHocPhan.MaLopHp);
+                // Kiểm tra trùng mã học phần
+                var exists = await _context.HocPhans
+                    .AnyAsync(hp => hp.MaHp == hocPhan.MaHp);
 
                 if (exists)
                 {
-                    ModelState.AddModelError("MaLopHp", "Mã lớp học phần đã tồn tại");
+                    ModelState.AddModelError("MaHp", "Mã học phần đã tồn tại");
+                    return View(hocPhan);
                 }
+
+                _context.HocPhans.Add(hocPhan);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            // Kiểm tra học phần có tồn tại
-            if (!string.IsNullOrWhiteSpace(lopHocPhan.MaHp))
-            {
-                var hocPhanExists = await _context.HocPhans
-                    .AnyAsync(h => h.MaHp == lopHocPhan.MaHp);
-
-                if (!hocPhanExists)
-                {
-                    ModelState.AddModelError("MaHp", "Học phần không tồn tại");
-                }
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Add(lopHocPhan);
-                    await _context.SaveChangesAsync();
-
-                    var hocPhan = await _context.HocPhans
-                        .FirstOrDefaultAsync(h => h.MaHp == lopHocPhan.MaHp);
-
-                    TempData["SuccessMessage"] =
-                        $"Đã thêm lớp học phần {lopHocPhan.MaLopHp} - {hocPhan?.TenHp} thành công!";
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateException ex)
-                {
-                    var innerMessage = ex.InnerException?.Message ?? ex.Message;
-
-                    if (innerMessage.Contains("FOREIGN KEY"))
-                    {
-                        ModelState.AddModelError("", "Học phần được chọn không tồn tại");
-                    }
-                    else if (innerMessage.Contains("PRIMARY KEY") || innerMessage.Contains("UNIQUE"))
-                    {
-                        ModelState.AddModelError("MaLopHp", "Mã lớp học phần đã tồn tại");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Không thể lưu. Vui lòng thử lại.");
-                    }
-                }
-            }
-
-            ViewData["MaHp"] = new SelectList(_context.HocPhans, "MaHp", "TenHp", lopHocPhan.MaHp);
-            return View(lopHocPhan);
+            return View(hocPhan);
         }
+
 
         // GET: LopHocPhans/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -499,5 +430,23 @@ namespace QLDiem.Controllers
             TempData["Success"] = "Cập nhật số lượng thành công";
             return RedirectToAction("DsLopDangMo");
         }
+        // POST: DangKyMonHocs/DeleteKhoiLop
+        public async Task<IActionResult> DeleteSinhVien(string maSv, string maLopHp)
+        {
+            if (string.IsNullOrEmpty(maSv) || string.IsNullOrEmpty(maLopHp))
+            {
+                TempData["ErrorMessage"] = "Thông tin không hợp lệ";
+                return RedirectToAction("Index");
+            }
+
+            var dangKy = await _context.DangKyMonHocs
+                .Include(d => d.MaSvNavigation)
+                .FirstOrDefaultAsync(d => d.MaSv == maSv && d.MaLopHp == maLopHp);
+                    _context.DangKyMonHocs.Remove(dangKy);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] =$"Đã xóa sinh viên {dangKy.MaSvNavigation?.HoTen} khỏi lớp học phần!";
+            return RedirectToAction("Details", new { id = maLopHp });
+        }
+
     }
 }

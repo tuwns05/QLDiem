@@ -59,10 +59,10 @@
         <div style="background:#ffffff; padding:25px; border-radius:10px; margin-bottom:30px;">
 
             <h4 style="
-                    margin-bottom:20px;
-                    padding-bottom:12px;
-                    border-bottom:2px solid #3498db;
-                    color:#2c3e50;">
+                        margin-bottom:20px;
+                        padding-bottom:12px;
+                        border-bottom:2px solid #3498db;
+                        color:#2c3e50;">
                 👥 Danh sách sinh viên (@Model.DangKyMonHocs.Count)
             </h4>
 
@@ -75,6 +75,7 @@
                             <th>Họ và tên</th>
                             <th style="width:120px;">Lớp</th>
                             <th style="width:160px;">Ngày đăng ký</th>
+                            <th style="width:100px; text-align:center;">Thao tác</th>
                         </tr>
                     </thead>
 
@@ -95,6 +96,13 @@
                                 <td>
                                     @dk.NgayDangKy?.ToString("dd/MM/yyyy HH:mm")
                                 </td>
+                                <td style="text-align:center;">
+                                    <a asp-action="DeleteSinhVien"
+                                       asp-route-maSv="@dk.MaSv"
+                                       asp-route-maLopHp="@dk.MaLopHp"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Bạn có chắc muốn xóa sinh viên @dk.MaSvNavigation?.HoTen khỏi lớp này?')">Xóa</a>
+                                </td>
                             </tr>
                             stt++;
                         }
@@ -106,12 +114,12 @@
     else
     {
         <div style="
-                background:#fff3cd;
-                padding:20px;
-                border-radius:8px;
-                margin-bottom:30px;
-                text-align:center;
-                color:#856404;">
+                    background:#fff3cd;
+                    padding:20px;
+                    border-radius:8px;
+                    margin-bottom:30px;
+                    text-align:center;
+                    color:#856404;">
             ⚠️ Chưa có sinh viên nào đăng ký lớp học phần này
         </div>
     }
