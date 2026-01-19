@@ -9,7 +9,7 @@
     ViewData["Title"] = "Chi tiết sinh viên";
 
     var diemSV = ViewBag.DiemSV as List<DiemSinhVienVm>;
-    var gpaList = ViewBag.GPA as IEnumerable<dynamic>;
+    var gpaList = ViewBag.GPA as List<Gpa>;
 }
 
 <h2>Thông tin sinh viên</h2>
@@ -46,7 +46,7 @@
     var hk1 = diemSV.Where(d => d.HocKy == 1).ToList();
     var hk2 = diemSV.Where(d => d.HocKy == 2).ToList();
 
-    @* ================= HỌC KỲ 1 ================= *@
+    <!-- ================= HỌC KỲ 1 ================= -->
     <h4 class="mt-4 text-primary">Học kỳ 1</h4>
 
     @if (hk1.Any())
@@ -90,18 +90,15 @@
             </tbody>
         </table>
 
-        @* GPA học kỳ 1 *@
-        if (gpaList != null)
+        @* GPA HK1 *@
+        var gpaHK1 = gpaList?.FirstOrDefault(g => g.HocKy == 1);
+        if (gpaHK1 != null)
         {
-            var gpaHK1 = gpaList.FirstOrDefault(g => g.HocKy == 1);
-            if (gpaHK1 != null)
-            {
-                <div class="alert alert-info">
-                    <strong>GPA HK1:</strong> @gpaHK1.GpaHocKy |
-                    <strong>TC:</strong> @gpaHK1.SoTcHocKy |
-                    <strong>GPA tích lũy:</strong> @gpaHK1.GpaTichLuy
-                </div>
-            }
+            <div class="alert alert-info text-primary">
+                <strong>GPA HK1 (@gpaHK1.NamHoc):</strong> @gpaHK1.GpaHocKy <br />
+                <strong>Số TC:</strong> @gpaHK1.SoTcHocKy <br />
+                <strong>GPA tích lũy:</strong> @gpaHK1.GpaTichLuy
+            </div>
         }
     }
     else
@@ -109,7 +106,7 @@
         <p class="text-muted">Chưa có học phần học kỳ 1.</p>
     }
 
-    @* ================= HỌC KỲ 2 ================= *@
+    <!-- ================= HỌC KỲ 2 ================= -->
     <h4 class="mt-5 text-primary">Học kỳ 2</h4>
 
     @if (hk2.Any())
@@ -117,12 +114,12 @@
         <table class="table table-bordered text-center">
             <thead class="table-secondary">
                 <tr>
-                    <th class="text-primary">Tên học phần</th>
-                    <th class="text-primary">TC</th>
-                    <th class="text-primary">QT</th>
-                    <th class="text-primary">CK</th>
-                    <th class="text-primary">TK</th>
-                    <th class="text-primary">Kết quả</th>
+                    <th>Tên học phần</th>
+                    <th>TC</th>
+                    <th>QT</th>
+                    <th>CK</th>
+                    <th>TK</th>
+                    <th>Kết quả</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,18 +150,15 @@
             </tbody>
         </table>
 
-        @* GPA học kỳ 2 *@
-        if (gpaList != null)
+        @* GPA HK2 *@
+        var gpaHK2 = gpaList?.FirstOrDefault(g => g.HocKy == 2);
+        if (gpaHK2 != null)
         {
-            var gpaHK2 = gpaList.FirstOrDefault(g => g.HocKy == 2);
-            if (gpaHK2 != null)
-            {
-                <div class="alert alert-info">
-                    <strong>GPA HK2:</strong> @gpaHK2.GpaHocKy |
-                    <strong>TC:</strong> @gpaHK2.SoTcHocKy |
-                    <strong>GPA tích lũy:</strong> @gpaHK2.GpaTichLuy
-                </div>
-            }
+            <div class="alert alert-info text-primary">
+                <strong>GPA HK2 (@gpaHK2.NamHoc):</strong> @gpaHK2.GpaHocKy <br />
+                <strong>Số TC:</strong> @gpaHK2.SoTcHocKy <br />
+                <strong>GPA tích lũy:</strong> @gpaHK2.GpaTichLuy
+            </div>
         }
     }
     else
@@ -172,11 +166,11 @@
         <p class="text-muted">Chưa có học phần học kỳ 2.</p>
     }
 
-    @* GPA TÍCH LŨY CUỐI *@
+    <!-- ================= GPA TÍCH LŨY ================= -->
     if (gpaList != null && gpaList.Any())
     {
         var gpaCuoi = gpaList.OrderByDescending(g => g.HocKy).First();
-        <div class="alert alert-success mt-4">
+        <div class="alert alert-success mt-4 text-primary">
             <h5>🎓 GPA TÍCH LŨY HIỆN TẠI</h5>
             <strong>GPA:</strong> @gpaCuoi.GpaTichLuy <br />
             <strong>Tổng TC:</strong> @gpaCuoi.SoTcTichLuy

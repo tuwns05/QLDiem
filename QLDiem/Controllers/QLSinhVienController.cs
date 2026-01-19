@@ -96,6 +96,7 @@ namespace QLDiem.Controllers
             // ===============================
             var gpaSV = await _context.Gpas
                 .Where(g => g.MaSv == id)
+                .OrderBy(g => g.NamHoc)
                 .OrderBy(g => g.HocKy)
                 .ToListAsync();
 
@@ -105,6 +106,11 @@ namespace QLDiem.Controllers
             return View(sinhVien);
         }
 
+        // GET: QLSinhVien/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
         // POST: QLSinhVien/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

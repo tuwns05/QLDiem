@@ -933,6 +933,8 @@ dl.row {
 .detail-value {
     color: #555;
 }
+
+/* GHI ĐÈ BOOTSTRAP table-secondary */
 .table thead.table-secondary th {
     color: #0d6efd !important; /* xanh dương */
     font-weight: 600;

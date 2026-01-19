@@ -41,7 +41,7 @@ public partial class QuanLyDiemContext : DbContext
     {
         modelBuilder.Entity<DangKyMonHoc>(entity =>
         {
-            entity.HasKey(e => e.MaDk).HasName("PK__DangKyMo__2725866C29C5DE9C");
+            entity.HasKey(e => e.MaDk).HasName("PK__DangKyMo__2725866C5F8FD7FA");
 
             entity.ToTable("DangKyMonHoc");
 
@@ -63,16 +63,16 @@ public partial class QuanLyDiemContext : DbContext
 
             entity.HasOne(d => d.MaLopHpNavigation).WithMany(p => p.DangKyMonHocs)
                 .HasForeignKey(d => d.MaLopHp)
-                .HasConstraintName("FK_DangKyMonHoc_LopHocPhan");
+                .HasConstraintName("FK_DKMH_LopHP");
 
             entity.HasOne(d => d.MaSvNavigation).WithMany(p => p.DangKyMonHocs)
                 .HasForeignKey(d => d.MaSv)
-                .HasConstraintName("FK_DangKyMonHoc_SinhVien");
+                .HasConstraintName("FK_DKMH_SV");
         });
 
         modelBuilder.Entity<Diem>(entity =>
         {
-            entity.HasKey(e => e.MaDiem).HasName("PK__Diem__33326025797ED59A");
+            entity.HasKey(e => e.MaDiem).HasName("PK__Diem__33326025E9A86D04");
 
             entity.ToTable("Diem");
 
@@ -90,16 +90,17 @@ public partial class QuanLyDiemContext : DbContext
 
             entity.HasOne(d => d.MaLopHpNavigation).WithMany(p => p.Diems)
                 .HasForeignKey(d => d.MaLopHp)
-                .HasConstraintName("FK_Diem_LopHocPhan");
+                .HasConstraintName("FK_Diem_LopHP");
 
             entity.HasOne(d => d.MaSvNavigation).WithMany(p => p.Diems)
                 .HasForeignKey(d => d.MaSv)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Diem_SV");
         });
 
         modelBuilder.Entity<DiemRenLuyen>(entity =>
         {
-            entity.HasKey(e => e.MaDrl).HasName("PK__DiemRenL__3D88F94D4351E073");
+            entity.HasKey(e => e.MaDrl).HasName("PK__DiemRenL__3D88F94D9495B4B6");
 
             entity.ToTable("DiemRenLuyen");
 
@@ -122,7 +123,7 @@ public partial class QuanLyDiemContext : DbContext
 
         modelBuilder.Entity<Gpa>(entity =>
         {
-            entity.HasKey(e => e.MaGpa).HasName("PK__GPA__3CD633E99D51AAEB");
+            entity.HasKey(e => e.MaGpa).HasName("PK__GPA__3CD633E9C9FE1585");
 
             entity.ToTable("GPA");
 
@@ -148,7 +149,7 @@ public partial class QuanLyDiemContext : DbContext
 
         modelBuilder.Entity<HocPhan>(entity =>
         {
-            entity.HasKey(e => e.MaHp).HasName("PK__HocPhan__2725A6EC01B22655");
+            entity.HasKey(e => e.MaHp).HasName("PK__HocPhan__2725A6ECF7250EA1");
 
             entity.ToTable("HocPhan");
 
@@ -163,7 +164,7 @@ public partial class QuanLyDiemContext : DbContext
 
         modelBuilder.Entity<LopHocPhan>(entity =>
         {
-            entity.HasKey(e => e.MaLopHp);
+            entity.HasKey(e => e.MaLopHp).HasName("PK__LopHocPh__976ACA326132D10F");
 
             entity.ToTable("LopHocPhan");
 
@@ -207,7 +208,7 @@ public partial class QuanLyDiemContext : DbContext
 
         modelBuilder.Entity<SinhVien>(entity =>
         {
-            entity.HasKey(e => e.MaSv).HasName("PK__SinhVien__2725081A72F82F04");
+            entity.HasKey(e => e.MaSv).HasName("PK__SinhVien__2725081A9AF3C387");
 
             entity.ToTable("SinhVien");
 
@@ -222,11 +223,11 @@ public partial class QuanLyDiemContext : DbContext
 
         modelBuilder.Entity<TaiKhoan>(entity =>
         {
-            entity.HasKey(e => e.MaTk).HasName("PK__TaiKhoan__272500708F005C56");
+            entity.HasKey(e => e.MaTk).HasName("PK__TaiKhoan__272500705319A704");
 
             entity.ToTable("TaiKhoan");
 
-            entity.HasIndex(e => e.TenDangNhap, "UQ__TaiKhoan__55F68FC02BF4729D").IsUnique();
+            entity.HasIndex(e => e.TenDangNhap, "UQ__TaiKhoan__55F68FC042CE3A48").IsUnique();
 
             entity.Property(e => e.MaTk).HasColumnName("MaTK");
             entity.Property(e => e.MaSv)
