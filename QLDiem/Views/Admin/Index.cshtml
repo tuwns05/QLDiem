@@ -141,6 +141,7 @@
                                         {
                 
                                     <a asp-action="SuaDiem" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a>
+                                    <a asp-action="XoaDiem" asp-route-id="@item.MaDiem" class="btn btn-xoa">Xóa Điểm</a>
                               
                                     }
                                     }
@@ -183,8 +184,8 @@
             </div>
         }
         <a class="btn btn-add" asp-action="InBangDiem" asp-route-id="@maLopHp">Xuất bảng điểm lớp học phần</a>
-        <a class="btn btn-add" asp-action="InDsSvRot" asp-route-id="@maLopHp">Xuất bảng điểm lớp học phần</a>
-        <a class="btn btn-add" asp-action="InDsSvDat" asp-route-id="@maLopHp">Xuất bảng điểm lớp học phần</a>
+        <a class="btn btn-add" asp-action="InDsSvRot" asp-route-id="@maLopHp"> Danh sách sinh viên rớt môn</a>
+        <a class="btn btn-add" asp-action="InDsSvDat" asp-route-id="@maLopHp">Danh sách sinh viên đạt môn</a>
     </div>
 </div>
 
