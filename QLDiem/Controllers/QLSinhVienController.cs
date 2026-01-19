@@ -54,6 +54,9 @@ namespace QLDiem.Controllers
 
             if (sinhVien == null) return NotFound();
 
+            // ===============================
+            // 1. LẤY ĐIỂM SINH VIÊN
+            // ===============================
             var diemSV = await (
                 from dk in _context.DangKyMonHocs
                 where dk.MaSv == id
@@ -88,12 +91,19 @@ namespace QLDiem.Controllers
                 }
             ).ToListAsync();
 
+            // ===============================
+            // 2. LẤY GPA (DÙNG ENTITY Gpa)
+            // ===============================
+            var gpaSV = await _context.Gpas
+                .Where(g => g.MaSv == id)
+                .OrderBy(g => g.HocKy)
+                .ToListAsync();
+
             ViewBag.DiemSV = diemSV;
+            ViewBag.GPA = gpaSV;
 
             return View(sinhVien);
         }
-
-
 
 
         // POST: QLSinhVien/Create

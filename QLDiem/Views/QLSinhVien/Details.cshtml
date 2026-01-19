@@ -1,11 +1,15 @@
-﻿@model QLDiem.Models.SinhVien
+﻿@using QLDiem.Models
+@model QLDiem.Models.SinhVien
+
 @section Styles {
     <link rel="stylesheet" href="~/css/QLSV.css" asp-append-version="true" />
 }
 
 @{
     ViewData["Title"] = "Chi tiết sinh viên";
-    var diemSV = ViewBag.DiemSV as List<DiemSinhVienVm>;    
+
+    var diemSV = ViewBag.DiemSV as List<DiemSinhVienVm>;
+    var gpaList = ViewBag.GPA as IEnumerable<dynamic>;
 }
 
 <h2>Thông tin sinh viên</h2>
@@ -39,29 +43,27 @@
 
 @if (diemSV != null && diemSV.Any())
 {
-    var nhomHocKy = diemSV
-        .GroupBy(d => new { d.HocKy, d.NamHoc })
-        .OrderBy(g => g.Key.HocKy);
+    var hk1 = diemSV.Where(d => d.HocKy == 1).ToList();
+    var hk2 = diemSV.Where(d => d.HocKy == 2).ToList();
 
-    foreach (var hk in nhomHocKy)
+    @* ================= HỌC KỲ 1 ================= *@
+    <h4 class="mt-4 text-primary">Học kỳ 1</h4>
+
+    @if (hk1.Any())
     {
-        <h4 class="mt-4 text-primary">
-            Học kỳ @hk.Key.HocKy - Năm học @hk.Key.NamHoc
-        </h4>
-
         <table class="table table-bordered text-center">
             <thead class="table-secondary">
                 <tr>
-                    <th class="text-primary">Tên học phần</th>
-                    <th class="text-primary">TC</th>
-                    <th class="text-primary">QT</th>
-                    <th class="text-primary">CK</th>
-                    <th class="text-primary">TK</th>
-                    <th class="text-primary">Kết quả</th>
+                    <th>Tên học phần</th>
+                    <th>TC</th>
+                    <th>QT</th>
+                    <th>CK</th>
+                    <th>TK</th>
+                    <th>Kết quả</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in hk)
+                @foreach (var item in hk1)
                 {
                     <tr>
                         <td class="text-start">@item.TenHp</td>
@@ -87,13 +89,104 @@
                 }
             </tbody>
         </table>
+
+        @* GPA học kỳ 1 *@
+        if (gpaList != null)
+        {
+            var gpaHK1 = gpaList.FirstOrDefault(g => g.HocKy == 1);
+            if (gpaHK1 != null)
+            {
+                <div class="alert alert-info">
+                    <strong>GPA HK1:</strong> @gpaHK1.GpaHocKy |
+                    <strong>TC:</strong> @gpaHK1.SoTcHocKy |
+                    <strong>GPA tích lũy:</strong> @gpaHK1.GpaTichLuy
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <p class="text-muted">Chưa có học phần học kỳ 1.</p>
+    }
+
+    @* ================= HỌC KỲ 2 ================= *@
+    <h4 class="mt-5 text-primary">Học kỳ 2</h4>
+
+    @if (hk2.Any())
+    {
+        <table class="table table-bordered text-center">
+            <thead class="table-secondary">
+                <tr>
+                    <th class="text-primary">Tên học phần</th>
+                    <th class="text-primary">TC</th>
+                    <th class="text-primary">QT</th>
+                    <th class="text-primary">CK</th>
+                    <th class="text-primary">TK</th>
+                    <th class="text-primary">Kết quả</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in hk2)
+                {
+                    <tr>
+                        <td class="text-start">@item.TenHp</td>
+                        <td>@item.SoTinChi</td>
+                        <td>@(item.DiemQt?.ToString("0.0") ?? "--")</td>
+                        <td>@(item.DiemCk?.ToString("0.0") ?? "--")</td>
+                        <td>@(item.DiemTk?.ToString("0.0") ?? "--")</td>
+                        <td>
+                            @if (item.DiemTk == null)
+                            {
+                                <span class="badge bg-secondary">Chưa có</span>
+                            }
+                            else if (item.KetQua)
+                            {
+                                <span class="badge bg-success">Đạt</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Rớt</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @* GPA học kỳ 2 *@
+        if (gpaList != null)
+        {
+            var gpaHK2 = gpaList.FirstOrDefault(g => g.HocKy == 2);
+            if (gpaHK2 != null)
+            {
+                <div class="alert alert-info">
+                    <strong>GPA HK2:</strong> @gpaHK2.GpaHocKy |
+                    <strong>TC:</strong> @gpaHK2.SoTcHocKy |
+                    <strong>GPA tích lũy:</strong> @gpaHK2.GpaTichLuy
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <p class="text-muted">Chưa có học phần học kỳ 2.</p>
+    }
+
+    @* GPA TÍCH LŨY CUỐI *@
+    if (gpaList != null && gpaList.Any())
+    {
+        var gpaCuoi = gpaList.OrderByDescending(g => g.HocKy).First();
+        <div class="alert alert-success mt-4">
+            <h5>🎓 GPA TÍCH LŨY HIỆN TẠI</h5>
+            <strong>GPA:</strong> @gpaCuoi.GpaTichLuy <br />
+            <strong>Tổng TC:</strong> @gpaCuoi.SoTcTichLuy
+        </div>
     }
 }
 else
 {
-    <p class="text-muted">Sinh viên chưa có điểm.</p>
+    <p class="text-muted">Sinh viên chưa đăng ký học phần.</p>
 }
-
 
 <a asp-action="Index" class="btn btn-secondary mt-3">
     ← Quay lại
