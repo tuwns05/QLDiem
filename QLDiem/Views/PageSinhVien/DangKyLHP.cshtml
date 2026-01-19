@@ -1,0 +1,127 @@
+﻿@model IEnumerable<QLDiem.Models.MoLopHocPhan>
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Danh sách lớp học phần đang mở";
+    Layout = "_Layoutsv";
+    string maSv = HttpContextAccessor.HttpContext?.Session.GetString("MaSv");
+  
+    var dsDangKy = ViewBag.DsDaDk as List<DangKyMonHoc>;
+ 
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/DangKyLHPsv.css" asp-append-version="true" />
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-warning">
+        <p class="alert-success">@TempData["Success"]</p>
+
+    </div>
+}
+
+
+@if(TempData["Error1"] != null)
+{
+    <div class="alert alert-warning">
+        <p class="alert-success">@TempData["Error1"]</p>
+
+    </div>
+}
+else
+{
+
+    <h1>Danh sách lớp học phần đang mở</h1>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-warning">
+            <p class="alert-success">@TempData["Error"]</p>
+
+        </div>
+    }
+    <table class="table-dslop">
+        <tr>
+            <th>Mã học phần</th>
+            <th>Tên học phần</th>
+            <th>Học kỳ</th>
+            <th>Năm học</th>
+            <th>Số lượng hiện tại</th>
+            <th>Số lượng tối đa</th>
+            <th>Hành động</th>
+        </tr>
+        @foreach (var lop in Model)
+        {
+            <tr>
+                <td>@lop.MaHp</td>
+                <td>@lop.MaHpNavigation.TenHp</td>
+                <td>@lop.HocKy</td>
+                <td>@lop.NamHoc</td>
+                @if(@lop.SoLuongHienTai >= @lop.SoLuong)
+                {
+                    <td>@lop.SoLuongHienTai</td>
+                    <td>@lop.SoLuong</td>
+                    <td colspan="3" style="color:red; font-weight:bold;">Lớp đã đầy</td>
+                }
+                else
+                {
+                    <td>@lop.SoLuongHienTai</td>
+                    <td>@lop.SoLuong</td>
+                    <td>
+                        <form method="post" asp-controller="PageSinhVien" asp-action="DangKyLHP">
+                            <input type="hidden" name="maMoLop" value="@lop.MaMoLop" />
+                            <button type="submit" class="btn-dangky">Đăng ký</button>
+                        </form>
+                    </td>
+                }
+
+
+            </tr>
+        }
+    </table>
+}
+
+<h2>Danh sách lớp học phần đã đăng ký</h2>
+
+<table>
+    <tr>
+        <th>Mã học phần</th>
+        <th>Tên học phần</th>
+        <th>Học kỳ</th>
+        <th>Năm học</th>
+        <th>Hành động</th>
+    </tr>
+
+    @if (dsDangKy == null || !dsDangKy.Any())
+    {
+        <tr>
+            <td colspan="5">Chưa đăng ký lớp học nào trong danh sách lớp học đang mở</td>
+        </tr>
+    }
+    else
+    {
+        foreach (var d in dsDangKy)
+        {
+            <tr>
+                <td>@d.MaLopHpNavigation.MaHp</td>
+                <td>@d.MaLopHpNavigation.MaHpNavigation.TenHp</td>
+                <td>@d.MaLopHpNavigation.HocKy</td>
+                <td>@d.MaLopHpNavigation.NamHoc</td>
+                <td>
+                    <form method="post"
+                          asp-controller="PageSinhVien"
+                          asp-action="HuyDangKyLHP">
+                        <input type="hidden" name="maDangKy" value="@d.MaDk" />
+                        <button type="submit" class="btn-huydk">
+                            Hủy đăng ký
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+
+<a asp-action="BackIndexSv" class="btn btn-back" asp-route-id ="@maSv">Quay lại</a>
