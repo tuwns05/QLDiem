@@ -1,63 +1,98 @@
 ﻿@model IEnumerable<QLDiem.Models.DiemSinhVienVm>
+@using QLDiem.Models
 
-    @{
-            ViewData["Title"] = "Quản lý điểm sinh viên";
-            Layout = "_Layoutsv";
-    }
-<table class="table table-bordered table-hover align-middle text-center">
-    <thead class="table-primary">
-        <tr>
-            <th>STT</th>
-            <th>Tên học phần</th>
-            <th>TC</th>
-            <th>Học kỳ</th>
-            <th>Năm học</th>
-            <th>Điểm QT</th>
-            <th>Điểm CK</th>
-            <th>Điểm TK</th>
-            <th>Kết quả</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int stt = 1;
-        }
+@{
+    ViewData["Title"] = "Quản lý điểm sinh viên";
+    Layout = "_Layoutsv";
 
-        @foreach (var item in Model)
-        {
+    var gpaList = ViewBag.GPA as List<Gpa>;
+}
+
+@foreach (var nhom in Model
+  .GroupBy(x => new { x.NamHoc, x.HocKy })
+  .OrderBy(g => g.Key.NamHoc)
+  .ThenBy(g => g.Key.HocKy))
+{
+    <div class="mt-4 fw-bold text-primary">
+        Năm học: @nhom.Key.NamHoc - Học kỳ: HK @nhom.Key.HocKy
+    </div>
+
+    <table class="table table-bordered table-hover align-middle text-center mt-2">
+        <thead class="table-primary">
             <tr>
-                <td>@stt</td>
-                <td class="text-start">@item.TenHp</td>
-                <td>@item.SoTinChi</td>
-                <td>@item.HocKy</td>
-                <td>@item.NamHoc</td>
-
-                <td>
-                    @(item.DiemQt.HasValue ? item.DiemQt.Value.ToString("0.0") : "--")
-                </td>
-                <td>
-                    @(item.DiemCk.HasValue ? item.DiemCk.Value.ToString("0.0") : "--")
-                </td>
-                <td>
-                    @(item.DiemTk.HasValue ? item.DiemTk.Value.ToString("0.0") : "--")
-                </td>
-
-                <td>
-                    @if (item.DiemTk == null)
-                    {
-                        <span class="badge bg-secondary">Chưa có</span>
-                    }
-                    else if (item.KetQua)
-                    {
-                        <span class="badge bg-success">Đạt</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Rớt</span>
-                    }
-                </td>
+                <th style="width:60px">STT</th>
+                <th class="text-start">Tên học phần</th>
+                <th style="width:80px">TC</th>
+                <th style="width:90px">QT</th>
+                <th style="width:90px">CK</th>
+                <th style="width:90px">TK</th>
+                <th style="width:120px">Kết quả</th>
             </tr>
-            stt++;
+        </thead>
+        <tbody>
+            @{
+                int stt = 1;
+            }
+
+            @foreach (var item in nhom)
+            {
+                <tr>
+                    <td>@stt</td>
+                    <td class="text-start">@item.TenHp</td>
+                    <td>@item.SoTinChi</td>
+                    <td>@(item.DiemQt?.ToString("0.0") ?? "--")</td>
+                    <td>@(item.DiemCk?.ToString("0.0") ?? "--")</td>
+                    <td>@(item.DiemTk?.ToString("0.0") ?? "--")</td>
+                    <td>
+                        @if (item.DiemTk == null)
+                        {
+                            <span class="badge bg-secondary">Chưa có</span>
+                        }
+                        else if (item.KetQua)
+                        {
+                            <span class="badge bg-success">Đạt</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Rớt</span>
+                        }
+                    </td>
+                </tr>
+                stt++;
+            }
+        </tbody>
+    </table>
+
+    @* ===== GPA HỌC KỲ ===== *@
+    if (gpaList != null)
+    {
+        var gpaHK = gpaList.FirstOrDefault(g =>
+            g.HocKy == nhom.Key.HocKy &&
+            g.NamHoc == nhom.Key.NamHoc);
+
+        if (gpaHK != null)
+        {
+            <div class="alert alert-info mt-2">
+                <strong>GPA học kỳ:</strong> @gpaHK.GpaHocKy &nbsp; | &nbsp;
+                <strong>Số TC:</strong> @gpaHK.SoTcHocKy <br />
+                <strong>GPA tích lũy:</strong> @gpaHK.GpaTichLuy &nbsp; | &nbsp;
+                <strong>Tổng TC:</strong> @gpaHK.SoTcTichLuy
+            </div>
         }
-    </tbody>
-</table>
+    }
+}
+
+@* ===== GPA TÍCH LŨY CUỐI ===== *@
+@if (gpaList != null && gpaList.Any())
+{
+    var gpaCuoi = gpaList
+        .OrderByDescending(g => g.NamHoc)
+        .ThenByDescending(g => g.HocKy)
+        .First();
+
+    <div class="alert alert-success mt-4">
+        <h5 class="mb-2">🎓 GPA TÍCH LŨY HIỆN TẠI</h5>
+        <strong>GPA:</strong> @gpaCuoi.GpaTichLuy <br />
+        <strong>Tổng số tín chỉ:</strong> @gpaCuoi.SoTcTichLuy
+    </div>
+}
