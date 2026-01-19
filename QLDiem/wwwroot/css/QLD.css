@@ -592,3 +592,121 @@ h1 {
     outline: 2px solid rgba(52, 152, 219, 0.4);
     outline-offset: 2px;
 }
+
+/* ButtonSuaXoa.css - Styles cho nút Sửa và Xóa */
+
+/* Button Sửa điểm */
+.btn-sua {
+    background: #ffc107;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    margin-right: 8px;
+}
+
+    .btn-sua:hover {
+        background: #e0a800;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(255, 193, 7, 0.3);
+    }
+
+/* Button Xóa điểm */
+.btn-danger {
+    background: #dc3545;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+    .btn-danger:hover {
+        background: #c82333;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(220, 53, 69, 0.3);
+    }
+
+/* Size modifier */
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+/* Focus state */
+.btn-sua:focus,
+.btn-danger:focus {
+    outline: 2px solid rgba(0, 0, 0, 0.2);
+    outline-offset: 2px;
+}
+
+/* Active state */
+.btn-sua:active,
+.btn-danger:active {
+    transform: translateY(0);
+}
+
+/* Button Nhập điểm */
+.btn-nhap-diem {
+    background: #28a745;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+    .btn-nhap-diem:hover {
+        background: #218838;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(40, 167, 69, 0.3);
+    }
+
+/* Icons Kết quả */
+.bi-check-all {
+    color: #28a745;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.bi-x-circle-fill {
+    color: #dc3545;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .btn-sua,
+    .btn-danger,
+    .btn-nhap-diem {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-right: 5px;
+    }
+
+    .btn-sm {
+        padding: 5px 8px;
+    }
+
+    .bi-check-all,
+    .bi-x-circle-fill {
+        font-size: 18px;
+    }
+}

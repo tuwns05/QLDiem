@@ -65,7 +65,7 @@
  
 
 <div class="table-wrapper">
-    <h5>@ViewBag.tenHP</h5>
+    <h5>@ViewBag.titleHP</h5>
 
     <table class="table">
         <thead>
@@ -141,7 +141,12 @@
                                         {
                 
                                     <a asp-action="SuaDiem" asp-route-id="@item.MaDiem" class="btn btn-sua">Sửa điểm</a>
-                                    <a asp-action="XoaDiem" asp-route-id="@item.MaDiem" class="btn btn-xoa">Xóa Điểm</a>
+                                        <a asp-action="XoaDiem"
+                                           asp-route-id="@item.MaDiem"
+                                           class="btn btn-danger btn-sm"
+                                           title="Xóa điểm">
+                                            🗑️
+                                        </a>
                               
                                     }
                                     }

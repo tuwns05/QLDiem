@@ -139,7 +139,10 @@ namespace QLDiem.Controllers
                                    where l.MaLopHp == MaLopHP
                                    select hp.TenHp)
                                   .FirstOrDefaultAsync() ?? MaLopHP;
-
+            var lopHocPhan = await _context.LopHocPhans
+                               .Include(l => l.MaHpNavigation)
+                               .FirstOrDefaultAsync(l => l.MaLopHp == MaLopHP);
+            ViewBag.titleHP = lopHocPhan.MaLopHp + " - " + lopHocPhan.MaHpNavigation.TenHp + " - HK " + lopHocPhan.HocKy + " - Năm " + lopHocPhan.NamHoc;
 
             var ds = await (from dk in _context.DangKyMonHocs
                             where dk.MaLopHp == MaLopHP

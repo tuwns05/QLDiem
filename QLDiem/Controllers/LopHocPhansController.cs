@@ -472,6 +472,37 @@ namespace QLDiem.Controllers
             TempData["Success"] = "Cập nhật số lượng thành công";
             return RedirectToAction("DsLopDangMo");
         }
+
+        //XÓA LỚP HỌC PHẦN ĐANG MỞ
+        public async Task<IActionResult> XoaLHPDangMo(int? id)
+        {
+            var lHPDM =await _context.MoLopHocPhans.FindAsync(id);
+            if(lHPDM != null)
+            {
+                _context.MoLopHocPhans.Remove(lHPDM);
+                await _context.SaveChangesAsync();
+                TempData["Succes"] = "Xóa lớp đang mở thành công";
+            }
+            return RedirectToAction("DsLopDangMo");
+
+        }
+
+        //XÓA TOÀN BỘ LỚP HỌC PHẦN ĐANG MỞ
+        public async Task<IActionResult> XoaToanBoLopDangMo()
+        {
+            var dsLopDangMo = await _context.MoLopHocPhans.ToListAsync();
+            if (dsLopDangMo.Any())
+            {
+                _context.MoLopHocPhans.RemoveRange(dsLopDangMo);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Xóa toàn bộ lớp học phần đang mở thành công";
+            }
+            else
+            {
+                TempData["Error"] = "Không có lớp học phần nào để xóa";
+            }
+            return RedirectToAction("DsLopDangMo");
+        }
         // POST: DangKyMonHocs/DeleteKhoiLop
         public async Task<IActionResult> DeleteSinhVien(string maSv, string maLopHp)
         {

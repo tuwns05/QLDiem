@@ -8,7 +8,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/DsLopDangMo.css" asp-append-version="true" />
 }
-<
+
 <h1>Danh sách lớp học phần đang mở</h1>
 
 @if (TempData["Success"] != null)
@@ -55,10 +55,19 @@ else
                         </td>
                     <td>
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
+
                     </td>
                     </form>
+                    <td >
+                        <a asp-action="XoaLHPDangMo" asp-route-id="@lop.MaMoLop" class="btn btn-danger">
+                            Xóa
+                        </a>
+                    </td>
                 </tr>
                 }
+                <td>
+                <a asp-action="XoaToanBoLopDangMo" class="btn btn-danger"> Xóa toàn bộ lớp học phần đang mở</a>
+                </td>
             </tr>
 </table>
     </div>
