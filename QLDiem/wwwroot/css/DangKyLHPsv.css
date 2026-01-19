@@ -275,3 +275,228 @@ form {
         .table-dslop::-webkit-scrollbar-thumb:hover {
             background: #357abd;
         }
+
+
+/* DsDangKy.css - Stylesheet cho Danh sách lớp đã đăng ký */
+
+/* Tiêu đề */
+h2 {
+    color: #2c3e50;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #3498db;
+}
+
+/* Table */
+table {
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+    /* Table Header */
+    table tr:first-child {
+        background: #3498db;
+    }
+
+th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #fff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+    th:last-child {
+        text-align: center;
+    }
+
+/* Table Body */
+tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+    tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #fafbfc;
+    }
+
+td {
+    padding: 14px 16px;
+    color: #495057;
+    font-size: 14px;
+}
+
+    /* Column Styling */
+    td:nth-child(1) {
+        font-weight: 600;
+        color: #3498db;
+    }
+
+    td:nth-child(2) {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    td:nth-child(3),
+    td:nth-child(4) {
+        text-align: left;
+        color: #6c757d;
+    }
+
+    td:nth-child(5) {
+        text-align: center;
+    }
+
+    /* Empty state */
+    td[colspan] {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6c757d;
+        font-style: italic;
+        font-size: 15px;
+    }
+
+/* Form */
+form {
+    display: inline;
+    margin: 0;
+}
+
+/* Button Hủy đăng ký */
+.btn-huydk {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.25);
+}
+
+    .btn-huydk:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.35);
+    }
+
+    .btn-huydk:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(220, 53, 69, 0.25);
+    }
+
+/* Responsive */
+@media (max-width: 992px) {
+    h2 {
+        font-size: 20px;
+        margin: 20px 0 15px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        padding: 12px 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    h2 {
+        font-size: 18px;
+        margin: 15px 0 12px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 0;
+    }
+
+    th,
+    td {
+        padding: 10px 12px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .btn-huydk {
+        padding: 7px 14px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    h2 {
+        font-size: 16px;
+    }
+
+    th,
+    td {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .btn-huydk {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+}
+
+/* Animation */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+table {
+    animation: slideIn 0.4s ease-out;
+}
+
+    /* Custom Scrollbar */
+    table::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    table::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    table::-webkit-scrollbar-thumb {
+        background: #3498db;
+        border-radius: 3px;
+    }
+
+        table::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+
+/* Focus state */
+.btn-huydk:focus {
+    outline: 2px solid rgba(220, 53, 69, 0.4);
+    outline-offset: 2px;
+}

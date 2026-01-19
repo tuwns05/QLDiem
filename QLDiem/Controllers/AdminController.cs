@@ -28,7 +28,7 @@ namespace QLDiem.Controllers
         {
             if (!string.IsNullOrEmpty(maSv) || !string.IsNullOrEmpty(maLopHp))
             {
-                // nếu maHp chính là MaLopHP (lớp học phần), tìm LopHocPhan theo khoá này
+                 
                 var sinhVien = !string.IsNullOrEmpty(maSv) ? await _context.SinhViens.FindAsync(maSv) : null;
                 var lopHocPhan = !string.IsNullOrEmpty(maLopHp) ? await _context.LopHocPhans.FindAsync(maLopHp) : null;
 
