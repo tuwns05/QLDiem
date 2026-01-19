@@ -276,5 +276,12 @@ namespace QLDiem.Controllers
 
 
         }
+        public async Task<IActionResult> Profile()
+        {
+            var maSV = HttpContext.Session.GetString("MaSv");
+            var sv = await _context.SinhViens
+                .FirstOrDefaultAsync(s => s.MaSv == maSV);
+            return View(sv);
+        }
     }
 }

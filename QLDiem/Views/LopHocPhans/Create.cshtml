@@ -1,15 +1,16 @@
-﻿@model QLDiem.Models.LopHocPhan
+﻿@model QLDiem.Models.HocPhan
 
 @{
-    ViewData["Title"] = "Thêm lớp học phần";
+    ViewData["Title"] = "Thêm học phần";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/QLD.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/nhapdiem.css" asp-append-version="true" />
 }
-<h1>Thêm lớp học phần mới</h1>
 
-<div class="table-wrapper" style="max-width:850px; margin:auto;">
+<h1>Thêm học phần mới</h1>
+
+<div class="table-wrapper" style="max-width: 750px; margin: auto;">
 
     <form asp-action="Create" method="post">
 
@@ -18,67 +19,51 @@
              style="background:#fee; padding:15px; border-radius:8px; margin-bottom:25px;">
         </div>
 
-        <!-- ===== MÃ LỚP HP ===== -->
+        <!-- ===== MÃ HỌC PHẦN ===== -->
         <div style="margin-bottom:22px;">
             <label class="form-label fw-semibold">
-                Mã lớp học phần <span class="text-danger">*</span>
+                Mã học phần <span class="text-danger">*</span>
             </label>
 
-            <input asp-for="MaLopHp"
+            <input asp-for="MaHp"
                    class="form-control"
-                   placeholder="VD: LHP001" />
-
-            <span asp-validation-for="MaLopHp" class="text-danger"></span>
-        </div>
-
-        <!-- ===== HỌC PHẦN ===== -->
-        <div style="margin-bottom:22px;">
-            <label class="form-label fw-semibold">
-                Học phần <span class="text-danger">*</span>
-            </label>
-
-            <select asp-for="MaHp"
-                    asp-items="ViewBag.MaHp"
-                    class="form-select">
-                <option value="">-- Chọn học phần --</option>
-            </select>
+                   placeholder="VD: HP001" />
 
             <span asp-validation-for="MaHp" class="text-danger"></span>
         </div>
 
-        <!-- ===== HỌC KỲ ===== -->
+        <!-- ===== TÊN HỌC PHẦN ===== -->
         <div style="margin-bottom:22px;">
             <label class="form-label fw-semibold">
-                Học kỳ <span class="text-danger">*</span>
+                Tên học phần <span class="text-danger">*</span>
             </label>
 
-            <select asp-for="HocKy" class="form-select">
-                <option value="">-- Chọn học kỳ --</option>
-                <option value="1">Học kỳ 1</option>
-                <option value="2">Học kỳ 2</option>
-                <option value="3">Học kỳ 3 (Hè)</option>
-            </select>
-
-            <span asp-validation-for="HocKy" class="text-danger"></span>
-        </div>
-
-        <!-- ===== NĂM HỌC ===== -->
-        <div style="margin-bottom:25px;">
-            <label class="form-label fw-semibold">
-                Năm học <span class="text-danger">*</span>
-            </label>
-
-            <input asp-for="NamHoc"
+            <input asp-for="TenHp"
                    class="form-control"
-                   placeholder="VD: 2023-2024" />
+                   placeholder="VD: Lập trình Web" />
 
-            <span asp-validation-for="NamHoc" class="text-danger"></span>
-
-            <small class="text-muted">
-                Định dạng: YYYY-YYYY
-            </small>
+            <span asp-validation-for="TenHp" class="text-danger"></span>
         </div>
 
+        <!-- ===== SỐ TÍN CHỈ ===== -->
+        <div style="margin-bottom:22px;">
+            <label class="form-label fw-semibold">
+                Số tín chỉ
+            </label>
+
+            <input asp-for="SoTinChi"
+                   type="number"
+                   min="1"
+                   class="form-control" />
+        </div>
+
+        <!-- ===== HỆ SỐ ===== -->
+        <div class="form-group">
+            <label class="control-label">Hệ số</label>
+            <input name="heSoInput" class="form-control"
+                   placeholder="Nhập phân số (vd: 4/6) hoặc số thập phân (vd: 0.67)" />
+            <span asp-validation-for="HeSo" class="text-danger"></span>
+        </div>
         <!-- ===== ACTION ===== -->
         <div style="
             display:flex;
@@ -89,12 +74,12 @@
             <button type="submit"
                     class="btn-add"
                     style="margin:0;">
-                ➕ Thêm mới
+                ➕ Lưu học phần
             </button>
 
             <a asp-action="Index"
                class="btn btn-ct">
-                Hủy
+                Quay lại
             </a>
         </div>
 

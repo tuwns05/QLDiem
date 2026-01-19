@@ -1,0 +1,93 @@
+﻿@model QLDiem.Models.SinhVien
+@{
+    ViewData["Title"] = "Hồ sơ sinh viên";
+    Layout = "_Layoutsv";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+
+<div class="sv-wrapper">
+
+    <div class="sv-container">
+
+        <!-- HEADER -->
+        <div class="sv-header">
+            <div class="sv-header-icon">👤</div>
+            <h2 class="sv-header-title">Hồ sơ sinh viên</h2>
+            <p class="sv-header-subtitle">
+                Thông tin cá nhân và tài khoản
+            </p>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="sv-content">
+
+            <!-- THÔNG TIN SINH VIÊN -->
+            <div class="sv-info-section">
+
+                <div class="sv-section-title">
+                    👤 Thông tin cá nhân
+                </div>
+
+                <div class="sv-info-grid">
+
+                    <div class="sv-info-label">Mã sinh viên</div>
+                    <div class="sv-info-value highlight">
+                        @Model.MaSv
+                    </div>
+
+                    <div class="sv-info-label">Họ và tên</div>
+                    <div class="sv-info-value">
+                        @Model.HoTen
+                    </div>
+
+                    <div class="sv-info-label">Lớp</div>
+                    <div class="sv-info-value">
+                        @Model.Lop
+                    </div>
+
+                    <div class="sv-info-label">Giới tính</div>
+                    <div class="sv-info-value">
+                        @Model.GioiTinh
+                    </div>
+
+                    <div class="sv-info-label">Ngày sinh</div>
+                    <div class="sv-info-value">
+                        @Model.NgaySinh?.ToString("dd/MM/yyyy")
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="sv-divider"></div>
+
+            <!-- ACTIONS -->
+            <div class="sv-actions">
+
+                <a asp-controller="AccCount"
+                   asp-action="EditTTSV"
+                   asp-route-id="@Model.MaSv"
+                   class="sv-btn sv-btn-success">
+                    ✏️ Đổi thông tin
+                </a>
+
+                <a asp-controller="AccCount"
+                   asp-action="EditPassW"
+                   class="sv-btn sv-btn-warning">
+                    🔐 Đổi mật khẩu
+                </a>
+
+                <a asp-controller="PageSinhVien"
+                   asp-action="Index"
+                   asp-route-id="@Context.Session.GetString("MaSv")"
+                   class="sv-btn sv-btn-secondary">
+                    ← Quay lại
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>

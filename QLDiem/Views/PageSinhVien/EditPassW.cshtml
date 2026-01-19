@@ -1,0 +1,110 @@
+﻿@model QLDiem.Models.TaiKhoan
+@{
+    ViewData["Title"] = "Đổi mật khẩu";
+    Layout = "_Layoutsv";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+
+<div class="sv-wrapper">
+
+    <div class="sv-container">
+
+        <!-- HEADER -->
+        <div class="sv-header">
+            <div class="sv-header-icon">🔐</div>
+            <h2 class="sv-header-title">Đổi mật khẩu</h2>
+            <p class="sv-header-subtitle">
+                Cập nhật mật khẩu để bảo mật tài khoản
+            </p>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="sv-content">
+
+            <form asp-action="EditPassW" method="post">
+                @Html.AntiForgeryToken()
+
+                <!-- Validation -->
+                <div asp-validation-summary="ModelOnly"
+                     class="sv-alert sv-alert-danger">
+                </div>
+
+                <!-- Mật khẩu hiện tại -->
+                <div class="sv-form-group">
+                    <label asp-for="CurrentPassword" class="sv-form-label">
+                        Mật khẩu hiện tại <span class="required">*</span>
+                    </label>
+                    <input asp-for="CurrentPassword"
+                           type="password"
+                           class="sv-form-control"
+                           autocomplete="current-password" />
+                    <span asp-validation-for="CurrentPassword" class="sv-error"></span>
+                </div>
+
+                <!-- Mật khẩu mới -->
+                <div class="sv-form-group">
+                    <label asp-for="NewPassword" class="sv-form-label">
+                        Mật khẩu mới <span class="required">*</span>
+                    </label>
+                    <input asp-for="NewPassword"
+                           type="password"
+                           class="sv-form-control"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="NewPassword" class="sv-error"></span>
+
+                    <div class="sv-form-helper">
+                        Ít nhất 6 ký tự, nên có chữ hoa và số
+                    </div>
+                </div>
+
+                <!-- Xác nhận -->
+                <div class="sv-form-group">
+                    <label asp-for="ConfirmPassword" class="sv-form-label">
+                        Xác nhận mật khẩu <span class="required">*</span>
+                    </label>
+                    <input asp-for="ConfirmPassword"
+                           type="password"
+                           class="sv-form-control"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="sv-error"></span>
+                </div>
+
+                <!-- ALERT -->
+                <div class="sv-alert sv-alert-info">
+                    <div>
+                        <strong>Lưu ý bảo mật</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Không chia sẻ mật khẩu</li>
+                            <li>Không dùng mật khẩu cũ</li>
+                            <li>Thay đổi định kỳ</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="sv-actions">
+                    <button type="submit" class="sv-btn sv-btn-warning">
+                        🔑 Đổi mật khẩu
+                    </button>
+
+                    <a asp-controller="PageSinhVien"
+                       asp-action="Profile"
+                       class="btn btn-secondary">
+                        Quay lại
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

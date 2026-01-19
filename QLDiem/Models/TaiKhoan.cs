@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLDiem.Models;
 
@@ -14,4 +16,13 @@ public partial class TaiKhoan
     public string? VaiTro { get; set; }
 
     public string? MaSv { get; set; }
+
+    [NotMapped]
+    public string CurrentPassword { get; set; }
+
+    [NotMapped]
+    public string NewPassword { get; set; }
+
+    [NotMapped]
+    public string ConfirmPassword { get; set; }
 }

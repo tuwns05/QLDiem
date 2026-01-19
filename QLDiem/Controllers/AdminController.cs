@@ -54,35 +54,7 @@ namespace QLDiem.Controllers
 
 
 
-        // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var diem = await _context.Diems
-                .Include(d => d.MaLopHpNavigation)
-                .Include(d => d.MaSvNavigation)
-                .FirstOrDefaultAsync(m => m.MaDiem == id);
-
-            if (diem == null) return NotFound();
-
-            return View(diem);
-        }
-
-        // POST: Admin/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var diem = await _context.Diems.FindAsync(id);
-            if (diem != null)
-            {
-                _context.Diems.Remove(diem);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
+    
         //GET SỬA ĐIỂM
         public async Task<IActionResult> SuaDiem(int? id)
         {
@@ -97,7 +69,24 @@ namespace QLDiem.Controllers
             return View(diem);
 
         }
-
+        //Xóa ĐIỂM
+       
+        public async Task<IActionResult> XoaDiem(int? id)
+        {  
+            var diem = await _context.Diems.FindAsync(id);
+         
+            try
+            {
+                _context.Diems.Remove(diem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("FillLopHP", new { MaLopHP = diem.MaLopHp });
+            }
+            catch (DbUpdateException ex)
+            {
+                ModelState.AddModelError("", "Lỗi khi xóa điểm: " + ex.Message);
+                return RedirectToAction("FillLopHP", new { MaLopHP = diem.MaLopHp });
+            }
+        }
         //SỬA ĐIỂM
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -401,7 +390,7 @@ namespace QLDiem.Controllers
             var worksheet = workbook.Worksheets.Add("Danh sách ");
 
             // Thêm tiêu đề cột
-            worksheet.Cell(1, 1).Value = tenLopHp;
+            worksheet.Cell(1, 1).Value = lopHocPhan.MaLopHp+"-"+tenLopHp + "-HK-" + lopHocPhan.HocKy +"-Năm-"+ lopHocPhan.NamHoc;
             worksheet.Cell(2, 1).Value = "Mã Sinh Viên";
             worksheet.Cell(2, 2).Value = "Họ Tên";
             worksheet.Cell(2, 3).Value = "Lớp";
@@ -462,7 +451,7 @@ namespace QLDiem.Controllers
             var worksheet = workbook.Worksheets.Add("Danh sách ");
 
             // Thêm tiêu đề cột
-            worksheet.Cell(1, 1).Value = tenLopHp;
+            worksheet.Cell(1, 1).Value = lopHocPhan.MaLopHp + "-" + tenLopHp + "-HK-" + lopHocPhan.HocKy + "-Năm-" + lopHocPhan.NamHoc;
             worksheet.Cell(2, 1).Value = "Mã Sinh Viên";
             worksheet.Cell(2, 2).Value = "Họ Tên";
             worksheet.Cell(2, 3).Value = "Lớp";
@@ -490,7 +479,7 @@ namespace QLDiem.Controllers
             {
                 workbook.SaveAs(stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiem.xlsx");
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiemSVR.xlsx");
             }
         }
 
@@ -524,7 +513,8 @@ namespace QLDiem.Controllers
             var worksheet = workbook.Worksheets.Add("Danh sách ");
 
             // Thêm tiêu đề cột
-            worksheet.Cell(1, 1).Value = tenLopHp;
+            worksheet.Cell(1, 1).Value = lopHocPhan.MaLopHp + "-" + tenLopHp + "-HK-" + lopHocPhan.HocKy + "-Năm-" + lopHocPhan.NamHoc;
+
             worksheet.Cell(2, 1).Value = "Mã Sinh Viên";
             worksheet.Cell(2, 2).Value = "Họ Tên";
             worksheet.Cell(2, 3).Value = "Lớp";
@@ -552,7 +542,7 @@ namespace QLDiem.Controllers
             {
                 workbook.SaveAs(stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiem.xlsx");
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BangDiemSVĐ.xlsx");
             }
         }
 

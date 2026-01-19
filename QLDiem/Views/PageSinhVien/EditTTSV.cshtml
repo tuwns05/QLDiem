@@ -1,0 +1,97 @@
+﻿@model QLDiem.Models.SinhVien
+@{
+    ViewData["Title"] = "Cập nhật thông tin sinh viên";
+    Layout = "_Layoutsv";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+}
+
+<div class="sv-wrapper">
+
+    <div class="sv-container">
+
+        <!-- HEADER -->
+        <div class="sv-header">
+            <div class="sv-header-icon">👤</div>
+            <h2 class="sv-header-title">Cập nhật thông tin sinh viên</h2>
+            <p class="sv-header-subtitle">
+                Chỉnh sửa thông tin cá nhân của bạn
+            </p>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="sv-content">
+
+            <form asp-action="EditTTSV" method="post">
+                @Html.AntiForgeryToken()
+
+                <!-- Mã sinh viên -->
+                <div class="sv-form-group">
+                    <label class="sv-form-label">Mã sinh viên</label>
+                    <input class="sv-form-control"
+                           value="@Model.MaSv"
+                           readonly />
+                    <input type="hidden" asp-for="MaSv" />
+                </div>
+
+                <!-- Họ tên -->
+                <div class="sv-form-group">
+                    <label asp-for="HoTen" class="sv-form-label"></label>
+                    <input asp-for="HoTen" class="sv-form-control" />
+                    <span asp-validation-for="HoTen" class="sv-error"></span>
+                </div>
+
+                <!-- Lớp -->
+                <div class="sv-form-group">
+                    <label asp-for="Lop" class="sv-form-label"></label>
+                    <input asp-for="Lop" class="sv-form-control" />
+                </div>
+
+                <!-- Giới tính -->
+                <div class="sv-form-group">
+                    <label asp-for="GioiTinh" class="sv-form-label"></label>
+                    <select asp-for="GioiTinh"
+                            class="sv-form-control sv-form-select">
+                        <option value="">-- Chọn giới tính --</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                </div>
+
+                <!-- Ngày sinh -->
+                <div class="sv-form-group">
+                    <label asp-for="NgaySinh" class="sv-form-label"></label>
+                    <input asp-for="NgaySinh"
+                           type="date"
+                           class="sv-form-control" />
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="sv-actions">
+
+                    <button type="submit"
+                            class="sv-btn sv-btn-success">
+                        💾 Lưu thay đổi
+                    </button>
+
+                    <a asp-controller="PageSinhVien"
+                       asp-action="Profile"
+                       class="btn btn-secondary">
+                        Quay lại
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
