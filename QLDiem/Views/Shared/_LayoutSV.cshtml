@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     @RenderSection("Styles", required: false)
-
+          
 </head>
 <body>
     <header>
@@ -28,15 +28,26 @@
             Két quả học tập sinh viên
         </div>
 
+        <div class="dang-ky-lop">
+            <a class="nav-link" asp-area="" asp-controller="PageSinhVien" asp-action="DangKyLHP">
+                <i class="bi bi-journal-plus fs-5"></i>
+                <span class="menu-text ms-2">Đăng ký lớp học phần</span>
+            </a>
+        </div>
+
         <div class="thong-tin-sv">
             <p>@maSv</p> - <p>@hoTen</p>
         </div>
+        <a class="nav-link" asp-controller="PageSinhVien" asp-action="Profile">
+            <i class="bi bi-person-circle fs-5"></i>
+            <span class="menu-text ms-2">Tài khoản</span>
+        </a>
         <a class="nav-link" asp-area="" asp-controller="AccCount" asp-action="Logout">
             <i class="bi bi-box-arrow-right fs-5"></i>
             <span class="menu-text ms-2">Logout</span>
         </a>
     </header>
- 
+        
             
 
             <main class="main-content">

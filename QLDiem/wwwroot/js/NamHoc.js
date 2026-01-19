@@ -12,3 +12,4 @@ function loadNamHocOptions() {
         $select.append('<option value="' + yearString + '">' + yearString + '</option>');
     }
 }
+

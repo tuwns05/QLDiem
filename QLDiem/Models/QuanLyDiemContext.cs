@@ -35,8 +35,8 @@ public partial class QuanLyDiemContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=MSI\\SQLEXPRESS;Database=QuanLyDiem;Trusted_Connection=True;TrustServerCertificate=True");
-
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-IUIOQFKS\\VIETTUAN;Database=QuanLyDiem;Trusted_Connection=True;TrustServerCertificate=True");
+    //=> optionsBuilder.UseSqlServer("Server=THEN;Database=QuanLyDiem;Trusted_Connection=True;TrustServerCertificate=True");
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<DangKyMonHoc>(entity =>
@@ -188,7 +188,7 @@ public partial class QuanLyDiemContext : DbContext
 
         modelBuilder.Entity<MoLopHocPhan>(entity =>
         {
-            entity.HasKey(e => e.MaMoLop).HasName("PK__MoLopHoc__180232610B98B918");
+            entity.HasKey(e => e.MaMoLop).HasName("PK__MoLopHoc__180232613E41476C");
 
             entity.ToTable("MoLopHocPhan");
 

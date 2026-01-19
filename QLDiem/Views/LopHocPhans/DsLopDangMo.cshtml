@@ -1,0 +1,65 @@
+﻿@model IEnumerable<QLDiem.Models.MoLopHocPhan>
+
+
+@{
+    ViewData["Title"] = "Danh sách lớp học phần đang mở";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/DsLopDangMo.css" asp-append-version="true" />
+}
+<
+<h1>Danh sách lớp học phần đang mở</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
+else
+{
+    <div>
+        
+        <table>
+            
+            <tr>
+                <th>MaHp</th>
+                <th>Tên học phần</th>
+                <th>Học Kỳ</th>
+                <th>Năm Học</th>
+                <th>Số lượng hiện tại</th>
+                <th>Số Lượng Tối Đa</th>
+            </tr>
+            <tr>
+                @foreach (var lop in Model)
+                {
+                <tr>
+                    <td>@lop.MaHp</td>
+                    <td>@lop.MaHpNavigation.TenHp</td>
+                    <td>@lop.HocKy</td>
+                    <td>@lop.NamHoc</td>
+                    <td>@lop.SoLuongHienTai</td>
+                    <form method="post" asp-controller="LopHocPhans" asp-action="CapNhatSL">
+                        <td>
+                        <input type="hidden" name="MaMoLop" value="@lop.MaMoLop" />
+                        <input type="number" name="SoLuong" value="@lop.SoLuong" min="@lop.SoLuongHienTai" required />
+                  
+                        </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </td>
+                    </form>
+                </tr>
+                }
+            </tr>
+</table>
+    </div>
+}

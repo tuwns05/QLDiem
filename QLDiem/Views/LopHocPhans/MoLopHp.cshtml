@@ -1,0 +1,100 @@
+﻿ @model QLDiem.Models.MoLopVM
+
+@{
+    ViewData["Title"] = "Mở đăng ký lớp học phần";
+
+
+    var hocPhans = ViewBag.HocPhans as List<QLDiem.Models.HocPhan>;
+    int namHienTai = DateTime.Now.Year -1;
+    int soNamSau = 5;  
+    int thang = DateTime.Now.Month;
+    int hocKyHienTai;
+
+    if (thang >= 9)          // 9-12
+        hocKyHienTai = 1;
+    else if (thang >= 6)     // 6-8
+        hocKyHienTai = 3;
+    else                     // 1-5
+        hocKyHienTai = 2;
+
+    int hocKyTiepTheo = hocKyHienTai == 3 ? 1 : hocKyHienTai + 1;
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/MoLopHocPhan.css" asp-append-version="true" />
+}
+<h1>Mở đăng ký lớp học phần</h1>
+<div class="container-molop">
+    @if(TempData["Error"] !=null){
+        <div class="alert-warning">
+            @TempData["Error"]
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            @TempData["Success"]
+        </div>
+    }
+    <form method="post" asp-action="MoLopHp">
+        <div class="mb-3">
+            <label>Học kỳ</label>
+            <select asp-for="HocKy" class="form-select" required>
+                <option value="">-- Chọn học kỳ --</option>
+
+                <option value="@hocKyHienTai">
+                    Học kỳ @hocKyHienTai (hiện tại)
+                </option>
+
+                <option value="@hocKyTiepTheo">
+                    Học kỳ @hocKyTiepTheo (tiếp theo)
+                </option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="nam_hoc">Năm học</label>
+            <select asp-for="NamHoc" class="form-select">
+                <option value="">-- Chọn năm học --</option>
+
+                @for (int i = 0; i < soNamSau; i++)
+                {
+                    string namHoc = $"{namHienTai + i}-{namHienTai + i + 1}";
+                    <option value="@namHoc">@namHoc</option>
+                }
+            </select>
+        </div>
+        <input type="number" asp-for="@Model.SoLuong" class="Text-box" placeholder="Nhập số lượng mặc định cho tất cả lớp" />
+        <input asp-for="@Model.NgayMo" type="datetime-local"  placeholder="Ngày đóng" />
+        <input asp-for="@Model.NgayDong" type="datetime-local"   placeholder="Ngày đóng"/>
+  
+            <button type="submit" class="btn btn-danger">
+        🚀 Mở toàn bộ học phần
+    </button> 
+      </form>
+      <div class="ds-lop-dang-mo">
+            <label>ADMIN ĐIỀU CHỈNH SỐ LƯỢNG TỪNG LỚP TẠI ĐÂY</label>
+            <a class="btn btn-add" asp-action="DsLopDangMo" >Danh sách lớp học phần đang mở</a>
+      </div>
+    <h4>Danh sách học phần</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Mã HP</th>
+                <th>Tên học phần</th>
+                <th>Số tín chỉ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var hp in hocPhans)
+            {
+                <tr>
+                    <td>@hp.MaHp</td>
+                    <td>@hp.TenHp</td>
+                    <td>@hp.SoTinChi</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+  </div>
+
+ 

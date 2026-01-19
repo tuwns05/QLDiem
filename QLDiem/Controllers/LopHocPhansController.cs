@@ -85,101 +85,74 @@ namespace QLDiem.Controllers
         // GET: LopHocPhans/Create
         public IActionResult Create()
         {
-            ViewData["MaHp"] = new SelectList(_context.HocPhans, "MaHp", "TenHp");
             return View();
         }
 
         // POST: LopHocPhans/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaLopHp,MaHp,HocKy,NamHoc")] LopHocPhan lopHocPhan)
+        public async Task<IActionResult> Create(HocPhan hocPhan, string heSoInput)
         {
-            ModelState.Remove("MaHpNavigation");
-            // Validation
-            if (string.IsNullOrWhiteSpace(lopHocPhan.MaLopHp))
-                ModelState.AddModelError("MaLopHp", "Mã lớp học phần không được để trống");
+            // Parse hệ số từ input (có thể là phân số như "4/6" hoặc số thập phân)
+            decimal? heSo = ParseFraction(heSoInput);
 
-            if (string.IsNullOrWhiteSpace(lopHocPhan.MaHp))
-                ModelState.AddModelError("MaHp", "Vui lòng chọn học phần");
-
-            if (lopHocPhan.HocKy < 1 || lopHocPhan.HocKy > 3)
-                ModelState.AddModelError("HocKy", "Học kỳ phải từ 1 đến 3");
-
-            if (string.IsNullOrWhiteSpace(lopHocPhan.NamHoc))
-                ModelState.AddModelError("NamHoc", "Năm học không được để trống");
-            else
+            if (!heSo.HasValue)
             {
-                // Validate format năm học
-                var parts = lopHocPhan.NamHoc.Split('-');
-                if (parts.Length != 2 ||
-                    !int.TryParse(parts[0], out int y1) ||
-                    !int.TryParse(parts[1], out int y2) ||
-                    y2 != y1 + 1)
-                {
-                    ModelState.AddModelError("NamHoc", "Năm học phải có định dạng YYYY-YYYY (VD: 2023-2024)");
-                }
+                ModelState.AddModelError("HeSo", "Hệ số không hợp lệ. Vui lòng nhập số thập phân (vd: 0.67) hoặc phân số (vd: 4/6)");
+                return View(hocPhan);
             }
 
-            // Kiểm tra trùng mã
-            if (!string.IsNullOrWhiteSpace(lopHocPhan.MaLopHp))
-            {
-                var exists = await _context.LopHocPhans
-                    .AnyAsync(l => l.MaLopHp == lopHocPhan.MaLopHp);
-
-                if (exists)
-                {
-                    ModelState.AddModelError("MaLopHp", "Mã lớp học phần đã tồn tại");
-                }
-            }
-
-            // Kiểm tra học phần có tồn tại
-            if (!string.IsNullOrWhiteSpace(lopHocPhan.MaHp))
-            {
-                var hocPhanExists = await _context.HocPhans
-                    .AnyAsync(h => h.MaHp == lopHocPhan.MaHp);
-
-                if (!hocPhanExists)
-                {
-                    ModelState.AddModelError("MaHp", "Học phần không tồn tại");
-                }
-            }
+            // Gán hệ số đã tính vào model
+            hocPhan.HeSo = Convert.ToDouble(heSo.Value);
 
             if (ModelState.IsValid)
             {
-                try
+                // Kiểm tra trùng mã học phần
+                var exists = await _context.HocPhans
+                    .AnyAsync(hp => hp.MaHp == hocPhan.MaHp);
+
+                if (exists)
                 {
-                    _context.Add(lopHocPhan);
-                    await _context.SaveChangesAsync();
-
-                    var hocPhan = await _context.HocPhans
-                        .FirstOrDefaultAsync(h => h.MaHp == lopHocPhan.MaHp);
-
-                    TempData["SuccessMessage"] =
-                        $"Đã thêm lớp học phần {lopHocPhan.MaLopHp} - {hocPhan?.TenHp} thành công!";
-
-                    return RedirectToAction(nameof(Index));
+                    ModelState.AddModelError("MaHp", "Mã học phần đã tồn tại");
+                    return View(hocPhan);
                 }
-                catch (DbUpdateException ex)
+
+                _context.HocPhans.Add(hocPhan);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Đã thêm học phần thành công! Hệ số: {heSo.Value:F2}";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(hocPhan);
+        }
+
+        // Helper method để parse phân số hoặc số thập phân
+        private decimal? ParseFraction(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            input = input.Trim();
+
+            // Trường hợp phân số
+            if (input.Contains("/"))
+            {
+                var parts = input.Split('/');
+                if (parts.Length == 2 &&
+                    decimal.TryParse(parts[0].Trim(), out decimal tuSo) &&
+                    decimal.TryParse(parts[1].Trim(), out decimal mauSo))
                 {
-                    var innerMessage = ex.InnerException?.Message ?? ex.Message;
-
-                    if (innerMessage.Contains("FOREIGN KEY"))
-                    {
-                        ModelState.AddModelError("", "Học phần được chọn không tồn tại");
-                    }
-                    else if (innerMessage.Contains("PRIMARY KEY") || innerMessage.Contains("UNIQUE"))
-                    {
-                        ModelState.AddModelError("MaLopHp", "Mã lớp học phần đã tồn tại");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Không thể lưu. Vui lòng thử lại.");
-                    }
+                    if (mauSo == 0) return null;
+                    return tuSo / mauSo;
                 }
+                return null;
             }
 
-            ViewData["MaHp"] = new SelectList(_context.HocPhans, "MaHp", "TenHp", lopHocPhan.MaHp);
-            return View(lopHocPhan);
+            // Trường hợp số thập phân
+            if (decimal.TryParse(input, out decimal value))
+                return value;
+
+            return null;
         }
 
         // GET: LopHocPhans/Edit/5
@@ -412,5 +385,110 @@ namespace QLDiem.Controllers
         {
             return _context.LopHocPhans.Any(e => e.MaLopHp == id);
         }
+
+        //Get mở view mở lớp học phần
+        public async Task<IActionResult> MoLopHp()
+        {
+            ViewBag.HocPhans = await _context.HocPhans.ToListAsync();
+
+            return View();
+        }
+        // Post mở lớp học phần
+        [HttpPost]
+        public async Task<IActionResult> MoLopHp(MoLopVM ml)
+        {
+            var hocPhan = await _context.HocPhans.ToListAsync();
+
+            ViewBag.HocPhans = await _context.HocPhans.ToListAsync();
+            bool check = await _context.MoLopHocPhans
+                .AnyAsync(x => x.HocKy == ml.HocKy && x.NamHoc == ml.NamHoc);
+            if (ml.NgayDong < ml.NgayMo)
+            {
+                TempData["Error"] = "ngày đóng phải lớn hơn ngày mở";
+                return View();
+            }
+            if (ml.NgayMo < DateTime.Now)
+            {
+                TempData["Error"] = "Không thể mở lớp ngày nhỏ hơn hiện tại";
+                return View();
+            }
+            if (check)
+            {
+                TempData["Error"] = "học kỳ này đã mở đăng ký";
+                return View();
+
+            }
+            else
+            {
+                var dsMoLop = hocPhan.Select(hp => new MoLopHocPhan
+                {
+                    MaHp = hp.MaHp,
+                    HocKy = ml.HocKy,
+                    NamHoc = ml.NamHoc,
+                    SoLuong = ml.SoLuong,
+                    SoLuongHienTai = 0,
+                    NgayMo = ml.NgayMo,
+                    NgayDong = ml.NgayDong
+                }).ToList();
+                _context.MoLopHocPhans.AddRange(dsMoLop);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Mở lớp học phần thành công";
+                return View();
+            }
+
+
+
+        }
+
+        //HIỂN THỊ DANH SÁCH LỚP HỌC PHÂN ĐANG MỞ
+        public async Task<IActionResult> DsLopDangMo()
+        {
+            var dsMoLopHp = await _context.MoLopHocPhans
+                .Include(m => m.MaHpNavigation)
+                .ToListAsync();
+            ViewBag.ngayDong = dsMoLopHp.FirstOrDefault()?.NgayDong;
+
+            if (dsMoLopHp == null || !dsMoLopHp.Any())
+            {
+                TempData["Error"] = "Chưa có lớp học phần nào được mở";
+                return View();
+            }
+            return View(dsMoLopHp);
+
+        }
+
+        //CHỈNH SỬA SỐ LƯỢNG
+        [HttpPost]
+        public async Task<IActionResult> CapNhatSL(int MaMoLop, int SoLuong)
+        {
+            var moLopHp = await _context.MoLopHocPhans.FindAsync(MaMoLop);
+            if (moLopHp == null)
+            {
+                return NotFound();
+            }
+
+            moLopHp.SoLuong = SoLuong;
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Cập nhật số lượng thành công";
+            return RedirectToAction("DsLopDangMo");
+        }
+        // POST: DangKyMonHocs/DeleteKhoiLop
+        public async Task<IActionResult> DeleteSinhVien(string maSv, string maLopHp)
+        {
+            if (string.IsNullOrEmpty(maSv) || string.IsNullOrEmpty(maLopHp))
+            {
+                TempData["ErrorMessage"] = "Thông tin không hợp lệ";
+                return RedirectToAction("Index");
+            }
+
+            var dangKy = await _context.DangKyMonHocs
+                .Include(d => d.MaSvNavigation)
+                .FirstOrDefaultAsync(d => d.MaSv == maSv && d.MaLopHp == maLopHp);
+                    _context.DangKyMonHocs.Remove(dangKy);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] =$"Đã xóa sinh viên {dangKy.MaSvNavigation?.HoTen} khỏi lớp học phần!";
+            return RedirectToAction("Details", new { id = maLopHp });
+        }
+
     }
 }
