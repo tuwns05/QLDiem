@@ -91,8 +91,20 @@ namespace QLDiem.Controllers
         // POST: LopHocPhans/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(HocPhan hocPhan)
+        public async Task<IActionResult> Create(HocPhan hocPhan, string heSoInput)
         {
+            // Parse hệ số từ input (có thể là phân số như "4/6" hoặc số thập phân)
+            decimal? heSo = ParseFraction(heSoInput);
+
+            if (!heSo.HasValue)
+            {
+                ModelState.AddModelError("HeSo", "Hệ số không hợp lệ. Vui lòng nhập số thập phân (vd: 0.67) hoặc phân số (vd: 4/6)");
+                return View(hocPhan);
+            }
+
+            // Gán hệ số đã tính vào model
+            hocPhan.HeSo = Convert.ToDouble(heSo.Value);
+
             if (ModelState.IsValid)
             {
                 // Kiểm tra trùng mã học phần
@@ -107,11 +119,41 @@ namespace QLDiem.Controllers
 
                 _context.HocPhans.Add(hocPhan);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = $"Đã thêm học phần thành công! Hệ số: {heSo.Value:F2}";
                 return RedirectToAction(nameof(Index));
             }
             return View(hocPhan);
         }
 
+        // Helper method để parse phân số hoặc số thập phân
+        private decimal? ParseFraction(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            input = input.Trim();
+
+            // Trường hợp phân số
+            if (input.Contains("/"))
+            {
+                var parts = input.Split('/');
+                if (parts.Length == 2 &&
+                    decimal.TryParse(parts[0].Trim(), out decimal tuSo) &&
+                    decimal.TryParse(parts[1].Trim(), out decimal mauSo))
+                {
+                    if (mauSo == 0) return null;
+                    return tuSo / mauSo;
+                }
+                return null;
+            }
+
+            // Trường hợp số thập phân
+            if (decimal.TryParse(input, out decimal value))
+                return value;
+
+            return null;
+        }
 
         // GET: LopHocPhans/Edit/5
         public async Task<IActionResult> Edit(string id)
