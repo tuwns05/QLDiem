@@ -56,16 +56,13 @@
     </form>
 </div>
 
-
+@* HIỂN THỊ FORM NHẬP ĐIỂM *@
 @if(ViewBag.ShowNhapDiem == true && ViewBag.DiemModel != null)
 {
     @await Html.PartialAsync("NhapDiem", (QLDiem.Models.Diem)ViewBag.DiemModel)
 }
 
-@if(ViewBag.ShowSuaDiem == true && ViewBag.DiemModel != null)
-{
-    @await Html.PartialAsync("NhapDiem", (QLDiem.Models.Diem)ViewBag.DiemModel)
-}
+ 
 
 <div class="table-wrapper">
     <h5>@ViewBag.tenHP</h5>
@@ -157,7 +154,6 @@
 </div>
 
 <div class="dashboard-footer-row">
-    <!-- KHỐI BIỂU ĐỒ -->
     <div class="chart-wrap">
         <div class="chart-card">
             <h4 class="chart-title">Thống kê kết quả</h4>
@@ -179,16 +175,16 @@
 
     <!-- KHỐI XUẤT FILE -->
     <div class="Xuat-file-diem">
-        <h5>Xuất file danh sách sinh viên</h5>
+        <h5>Xuất báo cáo kết quả học tập của lớp học phần</h5>
         @if (TempData["Error"] != null)
         {
             <div class="alert alert-warning">
                 @TempData["Error"]
             </div>
         }
-        <a class="btn btn-add" asp-action="InBangDiem" asp-route-id="@maLopHp">In bảng điểm</a>
-        <a class="btn btn-add" asp-action="InDsSvRot" asp-route-id="@maLopHp">In danh sách SV rớt</a>
-        <a class="btn btn-add" asp-action="InDsSvDat" asp-route-id="@maLopHp">In danh sách SV đạt</a>
+        <a class="btn btn-add" asp-action="InBangDiem" asp-route-id="@maLopHp">Xuất bảng điểm lớp học phần</a>
+        <a class="btn btn-add" asp-action="InDsSvRot" asp-route-id="@maLopHp">Xuất bảng điểm lớp học phần</a>
+        <a class="btn btn-add" asp-action="InDsSvDat" asp-route-id="@maLopHp">Xuất bảng điểm lớp học phần</a>
     </div>
 </div>
 

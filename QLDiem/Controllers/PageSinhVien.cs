@@ -62,6 +62,27 @@ namespace QLDiem.Controllers
 
             return View(diemSV);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [HttpGet]
         public ActionResult DangKyLHP()
         {
@@ -72,15 +93,45 @@ namespace QLDiem.Controllers
                 return View();
             }
 
+            var maSv = HttpContext.Session.GetString("MaSv");
+
+            var dsDaDk = _context.DangKyMonHocs
+                .Include(dk => dk.MaLopHpNavigation)
+                    .ThenInclude(lhp => lhp.MaHpNavigation)
+                .Where(dk =>
+                    dk.MaSv == maSv &&
+                    _context.MoLopHocPhans.Any(mo =>
+                        mo.MaHp == dk.MaLopHpNavigation.MaHp &&
+                        mo.HocKy == dk.HocKy &&
+                        mo.NamHoc == dk.NamHoc
+                    )
+                )
+                .ToList();
+        
+            ViewBag.DsDaDk = dsDaDk;
             return View(ds);
         }
 
+        //XỬ LÝ ĐĂNG KÝ LỚP HỌC PHẦN
         [HttpPost]
         public async Task<IActionResult> DangKyLHP(int maMoLop)
         {
             bool SvDaDk = true;
             var maSv = HttpContext.Session.GetString("MaSv");
+            var dsDaDk = _context.DangKyMonHocs
+                    .Include(dk => dk.MaLopHpNavigation)
+                        .ThenInclude(lhp => lhp.MaHpNavigation)
+                    .Where(dk =>
+                        dk.MaSv == maSv &&
+                        _context.MoLopHocPhans.Any(mo =>
+                            mo.MaHp == dk.MaLopHpNavigation.MaHp &&
+                            mo.HocKy == dk.HocKy &&
+                            mo.NamHoc == dk.NamHoc
+                        )
+                    )
+                    .ToList();
 
+            ViewBag.DsDaDk = dsDaDk;
             var lop = _context.MoLopHocPhans.FirstOrDefault(m => m.MaMoLop == maMoLop);
 
             var checkLHP = _context.LopHocPhans.FirstOrDefault(l => l.MaHp == lop.MaHp && l.HocKy == lop.HocKy && l.NamHoc == lop.NamHoc);
@@ -118,8 +169,11 @@ namespace QLDiem.Controllers
                 await UpdateSL(maMoLop);
                 TempData["Success"] = "Đăng ký lớp học phần thành công!";
             }
-            var dsAfterAddSV = _context.MoLopHocPhans.Include(m => m.MaHpNavigation).ToList();
-            return View(dsAfterAddSV);
+            var ds = _context.MoLopHocPhans
+                 .Include(m => m.MaHpNavigation)
+                 .ToList();
+      
+            return View(ds);
 
         }
         //Thêm một lớp học phần mới khi chưa có sinh viên nào học, khi có sinh viên đăng ký
@@ -171,6 +225,49 @@ namespace QLDiem.Controllers
             await _context.SaveChangesAsync();
         }
 
+
+        //XỬ LÝ HỦY LỚP HỌC PHẦN
+        [HttpPost]
+        public async Task<IActionResult> HuyDangKyLHP(int maDangKy)
+        {
+            var maSv = HttpContext.Session.GetString("MaSv");
+
+            var dangKy = await _context.DangKyMonHocs
+                .FirstOrDefaultAsync(dk => dk.MaDk == maDangKy && dk.MaSv == maSv);
+
+            if (dangKy == null)
+            {
+                TempData["Error"] = "Không tìm thấy đăng ký hợp lệ!";
+                return RedirectToAction("DangKyLHP");
+            }
+
+            var lopHp = await _context.LopHocPhans.FindAsync(dangKy.MaLopHp);
+
+            if (lopHp != null)
+            {
+                var moLop = await _context.MoLopHocPhans
+                    .FirstOrDefaultAsync(m =>
+                        m.MaHp == lopHp.MaHp &&
+                        m.HocKy == lopHp.HocKy &&
+                        m.NamHoc == lopHp.NamHoc);
+
+                if (moLop != null && moLop.SoLuongHienTai > 0)
+                {
+                    moLop.SoLuongHienTai--;
+                }
+            }
+
+            _context.DangKyMonHocs.Remove(dangKy);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Hủy đăng ký lớp học phần thành công!";
+            var ds = _context.MoLopHocPhans
+               .Include(m => m.MaHpNavigation)
+               .ToList();
+            return RedirectToAction("DangKyLHP");
+
+
+        }
 
         public IActionResult BackIndexSv(String id)
         {
