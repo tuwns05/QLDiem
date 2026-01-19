@@ -58,17 +58,12 @@
         </div>
 
         <!-- ===== HỆ SỐ ===== -->
-        <div style="margin-bottom:25px;">
-            <label class="form-label fw-semibold">
-                Hệ số
-            </label>
-
-            <input asp-for="HeSo"
-                   type="number"
-                   step="0.1"
-                   class="form-control" />
+        <div class="form-group">
+            <label class="control-label">Hệ số</label>
+            <input name="heSoInput" class="form-control"
+                   placeholder="Nhập phân số (vd: 4/6) hoặc số thập phân (vd: 0.67)" />
+            <span asp-validation-for="HeSo" class="text-danger"></span>
         </div>
-
         <!-- ===== ACTION ===== -->
         <div style="
             display:flex;
