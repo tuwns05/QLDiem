@@ -93,8 +93,11 @@ namespace QLDiem.Controllers
             return View(sinhVien);
         }
 
-
-
+        // GET: QLSinhVien/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
         // POST: QLSinhVien/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
